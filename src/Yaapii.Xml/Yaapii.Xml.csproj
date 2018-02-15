@@ -3,6 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
+    <Version>0.1.0</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
+    <PackageLicenseUrl>https://github.com/icarus-consulting/Yaapii.Xml/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageId>Yaapii.Xml</PackageId>
+    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml</RepositoryUrl>
+    <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
   </PropertyGroup>
 
   <!-- this configuration is used by generate-opencover task -->
