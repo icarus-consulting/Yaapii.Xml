@@ -29,10 +29,10 @@ IXSL xsl =
         <xsl:template match='/'>hello</xsl:template></xsl:stylesheet>"
     );
 
-    Assert.Equal(
-        "hello",
-        xsl.TransformedToText(
-            new XMLQuery("<something/>")
-        )
-    );
+Assert.Equal(
+    "hello",
+    xsl.TransformedToText(
+        new XMLQuery("<something/>")
+    )
+);
 ```
