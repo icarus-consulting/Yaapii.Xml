@@ -33,7 +33,7 @@ var netstandard         = "netstandard2.0";
 
 // Important for github release
 var owner = "icarus-consulting";
-var repository = "dop";
+var repository = "Yaapii.Xml";
 
 var username = "";
 var password = "";
