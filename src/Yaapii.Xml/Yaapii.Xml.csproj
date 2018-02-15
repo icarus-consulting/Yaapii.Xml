@@ -11,6 +11,8 @@
     <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
     <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml</RepositoryUrl>
     <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
+    <Authors>ICARUS Consulting GmbH</Authors>
+    <Company>ICARUS Consulting GmbH</Company>
   </PropertyGroup>
 
   <!-- this configuration is used by generate-opencover task -->
