@@ -9,7 +9,7 @@ Apply XPath queries to an XML document:
 var xml =
     new TextOf(
         new Atoms.IO.InputOf("<root><a><x type='value'>1</x></a><a><x>2</x></a></root>")
-    ).AsString(); //you can get the ml string from wherever you want - no need to use atoms, if you don't want to
+    ).AsString(); //you can get the xml string from wherever you want - no need to use atoms, if you don't want to
 
 //Get <a> elements 
 new XMLQuery(doc).Nodes("//a"); //Will give you a list of new XMLQuery objects which contain the <a>
