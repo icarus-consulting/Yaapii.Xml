@@ -5,7 +5,7 @@ Useful classes for working with XML.
 ## Usage
 
 Apply XPath queries to an XML document:
-```
+```csharp
 var xml =
     new TextOf(
         new Atoms.IO.InputOf("<root><a><x type='value'>1</x></a><a><x>2</x></a></root>")
@@ -20,7 +20,7 @@ new XMLQuery(doc).Values("//x/@type"); //will give you a list of values of the t
 
 Apply XSL transformations to an XML document:
 
-```
+```csharp
 IXSL xsl = 
     new XSLDocument(
         @"<xsl:stylesheet 
