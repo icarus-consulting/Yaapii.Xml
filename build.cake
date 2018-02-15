@@ -255,7 +255,7 @@ Task("Default")
   .IsDependentOn("Test Yaapii")
   .IsDependentOn("Generate-Coverage")
   .IsDependentOn("Generate-Coverage-Report")
-  .IsDependentOn("Upload-Coverage")
+  //.IsDependentOn("Upload-Coverage") codecov cannot be used, we have a private repo.
   .IsDependentOn("Pack")
   .IsDependentOn("Release");
 
