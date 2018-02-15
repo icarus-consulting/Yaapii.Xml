@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <!-- this configuration is used by generate-opencover task -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCpu'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\strip.xsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\strip.xsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yaapii.Atoms" Version="0.11.0" />
+    <PackageReference Include="Yaapii.Xml.Xambly" Version="0.3.0" />
+  </ItemGroup>
+
+</Project>

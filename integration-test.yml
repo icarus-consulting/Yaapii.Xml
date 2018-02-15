@@ -1,0 +1,6 @@
+repository:
+    clone_url: https://github.com/icarus-consulting/tecnomatix-entity-test.git
+test:
+    type: ems-standalone
+    study: IntegrationTests.psz
+    command: TmxIntegrationTestsPlugin

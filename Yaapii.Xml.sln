@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{758D0EE5-A320-4FDC-BB6A-588FF119B9B9}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		build.ps1 = build.ps1
+		codecov.yml = codecov.yml
+		integration-test.yml = integration-test.yml
+		package.json = package.json
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Yaapii", "Yaapii", "{0D661DC1-9880-4B63-834D-2BF837E9C373}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{77677F23-BB36-404C-8D91-3195685A4E95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaapii.Xml", "src\Yaapii.Xml\Yaapii.Xml.csproj", "{7B387941-7000-4539-AD4A-FA19B1D0B8D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Yaapii.Xml", "tests\Test.Yaapii.Xml\Test.Yaapii.Xml.csproj", "{57C2DF07-0F5A-4309-A39A-8FF7D483348D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|x64.ActiveCfg = Debug|x64
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|x64.Build.0 = Debug|x64
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|x64.ActiveCfg = Release|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|x64.Build.0 = Release|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|x64.Build.0 = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|x64.ActiveCfg = Release|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5} = {0D661DC1-9880-4B63-834D-2BF837E9C373}
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D} = {77677F23-BB36-404C-8D91-3195685A4E95}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29AE07AD-8206-4E1D-9B90-470892CE8EED}
+	EndGlobalSection
+EndGlobal
