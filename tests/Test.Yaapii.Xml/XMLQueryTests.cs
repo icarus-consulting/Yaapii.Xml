@@ -3,8 +3,9 @@ using Xunit;
 using Yaapii.Atoms.Enumerable;
 using System.Xml;
 using System.Xml.Linq;
+using Yaapii.Xml;
 
-namespace Yaapii.Xml.Test
+namespace Test.Yaapii.Xml
 {
     public sealed class XMLQueryTests
     {
@@ -13,13 +14,13 @@ namespace Yaapii.Xml.Test
         {
             IXML doc =
                 new XMLQuery(
-                    new Atoms.IO.InputOf(
+                    new global::Yaapii.Atoms.IO.InputOf(
                         "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                     )
                 );
 
             Assert.True(
-                new Atoms.Enumerable.LengthOf(
+                new global::Yaapii.Atoms.Enumerable.LengthOf(
                     doc.Nodes("//a")
                 ).Value() == 2
             );
@@ -78,7 +79,7 @@ namespace Yaapii.Xml.Test
         {
             IXML doc =
                new XMLQuery(
-                   new Atoms.IO.InputOf(
+                   new global::Yaapii.Atoms.IO.InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
                );
@@ -95,7 +96,7 @@ namespace Yaapii.Xml.Test
         {
             IXML doc =
                new XMLQuery(
-                   new Atoms.IO.InputOf(
+                   new global::Yaapii.Atoms.IO.InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
                );
@@ -152,7 +153,7 @@ namespace Yaapii.Xml.Test
         {
             IXML doc =
                 new XMLQuery(
-                    new Yaapii.Atoms.IO.InputOf(
+                    new global::Yaapii.Atoms.IO.InputOf(
                         "<root><a><x>1</x></a><a><x>2</x></a></root>"
                     )
                 );
