@@ -19,4 +19,4 @@ IF YOU DON'T FILL OUT THE FOLLOWING INFORMATION YOUR ISSUE MIGHT BE CLOSED WITHO
 <!-- Normally this include a stack trace and some more information. -->
 
 ### Mention any other details that might be useful
-<!-- Give any information that might be usefull -->
+<!-- Give any information that might be useful -->
