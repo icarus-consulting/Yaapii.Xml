@@ -36,3 +36,10 @@ Assert.Equal(
     )
 );
 ```
+
+### Code Coverage
+To generate a code coverage report on your local dev machine
+```ps
+PS> .\build.ps1 -report=true
+```
+This will generate a code coverage report in `.\artifacts/coverage-report`. Open the `index.html` with your browser of choice.
