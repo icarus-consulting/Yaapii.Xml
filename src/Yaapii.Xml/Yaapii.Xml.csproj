@@ -19,12 +19,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCpu'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>artifacts\Yaapii.Xml.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <PlatformTarget>x64</PlatformTarget>
+    <Description>Simple parsing, printing, and transforming of XML documents and nodes</Description>
+    <NeutralLanguage>en-001</NeutralLanguage>
+    <PackageTags>xml,xsl, xslt</PackageTags>
+    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
+    <DocumentationFile>artifacts\Yaapii.Xml.xml</DocumentationFile>
+    <Authors>ICARUS Consulting GmbH</Authors>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
