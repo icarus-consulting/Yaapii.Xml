@@ -7,7 +7,6 @@ using Yaapii.Asserts.Xml;
 using Yaapii.Atoms.IO;
 using Yaapii.Xml;
 using Yaapii.Atoms.Text;
-using Yaapii.IO;
 
 namespace Test.Yaapii.Xml
 {
