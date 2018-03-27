@@ -1,5 +1,7 @@
 # Yaapii.Xml
 
+[![Build status](https://ci.appveyor.com/api/projects/status/3j30j800d7cympsd?svg=true)](https://ci.appveyor.com/project/icarus-consulting/yaapii-xml)
+
 Useful classes for working with XML.
 
 ## Usage

@@ -20,7 +20,7 @@ var deployment						= Directory("./artifacts/deployment");
 ///////////////////////////////////////////////////////////////////////////////
 var ypXml							= Directory("./src/Yaapii.Xml");
 var ypXmlTests						= Directory("./tests/Test.Yaapii.Xml");
-var version							= "0.1.0";
+var version							= "0.1.1";
 
 ///////////////////////////////////////////////////////////////////////////////
 // CONFIGURATION VARIABLES
