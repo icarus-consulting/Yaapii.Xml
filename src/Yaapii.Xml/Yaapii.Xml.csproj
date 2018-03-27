@@ -45,7 +45,6 @@
 
   <ItemGroup>
     <PackageReference Include="Yaapii.Atoms" Version="0.13.0" />
-    <PackageReference Include="Yaapii.Xambly" Version="0.5.0" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
 namespace Yaapii.Xml
 {
+    /// <summary>
+    /// IXML provides acess to a XML Document via XPath queries.
+    /// </summary>
     public interface IXML
     {
         /// <summary>
@@ -32,7 +36,7 @@ namespace Yaapii.Xml
         /// (use <code>xpath(..).get(0)</code>). But when/if you need to get more than
         /// just a plain text - use {@link #nodes(String)}.
         ///</para>
-        /// <para>The <see cref="IList{string}"/> returned will throw <see cref="IndexOutOfRangeException"/>
+        /// <para>The <see cref="IList"/> returned will throw <see cref="IndexOutOfRangeException"/>
         /// if you try to access a node which wasn't found by this XPath query.
         /// </para>
         /// <para>An IllegalArgumentException} is thrown if the parameter
@@ -52,7 +56,7 @@ namespace Yaapii.Xml
         /// if you try to access a node which wasn't found by this XPath query.
         /// </para>
         /// <para>An <see cref="ArgumentException"/> is thrown if the parameter
-        /// passed is not a valid XPath expression.
+        /// passed is not a valid XPath expression.</para>
         ///
         /// </summary>
         /// <param name="query">The XPath query</param>
