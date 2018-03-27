@@ -45,7 +45,13 @@ namespace Yaapii.Xml
             _asm = asm;
         }
 
-
+        /// <summary>
+        /// Access embedded entity.
+        /// </summary>
+        /// <param name="absoluteUri">absolute uri to the referenced file</param>
+        /// <param name="role">unused in this implementation</param>
+        /// <param name="ofObjectToReturn">type of the object</param>
+        /// <returns>The requested entity</returns>
         public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
         {
             var res = Path.GetFileName(absoluteUri.AbsolutePath);

@@ -15,6 +15,10 @@ using System.Xml;
 
 namespace Yaapii.Xml
 {
+    /// <summary>
+    /// Provides access to a XML Document via XPath queries.
+    /// Type is <see cref="IXML"/>
+    /// </summary>
     public sealed class XMLQuery : IXML
     {
         private readonly IScalar<string> _xml;
@@ -41,7 +45,7 @@ namespace Yaapii.Xml
         /// <summary>
         /// XML from a stream.
         /// </summary>
-        /// <param name="node">stream with xml text</param>
+        /// <param name="stream">stream with xml text</param>
         public XMLQuery(Stream stream) : this(
             new TextOf(
                 new InputOf(stream)))
@@ -50,7 +54,7 @@ namespace Yaapii.Xml
         /// <summary>
         /// XML from a url.
         /// </summary>
-        /// <param name="node">url to ger xml text from</param>
+        /// <param name="url">url to ger xml text from</param>
         public XMLQuery(Url url) : this(
             new InputOf(url))
         { }
@@ -58,7 +62,7 @@ namespace Yaapii.Xml
         /// <summary>
         /// XML from a file.
         /// </summary>
-        /// <param name="node">file to get xml text from</param>
+        /// <param name="file">file to get xml text from</param>
         public XMLQuery(Uri file) : this(
             new InputOf(file))
         { }
@@ -66,7 +70,7 @@ namespace Yaapii.Xml
         /// <summary>
         /// XML from <see cref="IInput"/>.
         /// </summary>
-        /// <param name="node">XNode to make XML from</param>
+        /// <param name="input">XNode to make XML from</param>
         public XMLQuery(IInput input) : this(
             new TextOf(input))
         { }
@@ -180,12 +184,12 @@ namespace Yaapii.Xml
         /// if you try to access a node which wasn't found by this XPath query.
         /// </para>
         /// <para>An <see cref="ArgumentException"/> is thrown if the parameter
-        /// passed is not a valid XPath expression.
+        /// passed is not a valid XPath expression.</para>
         ///
         /// </summary>
-        /// <param name="query">The XPath query</param>
+        /// <param name="xpath">The XPath query</param>
         /// <returns>Collection of DOM nodes</returns>
-        public IList<IXML> Nodes(string xpQuery)
+        public IList<IXML> Nodes(string xpath)
         {
             // csa_180201: The InvalidOperationException is never fired here.
             // FetchNodes returns a ListOf<XElement>(...) which is created by the result (IEnumerable<XElement>) of XPathSelectElements(...).
@@ -194,7 +198,7 @@ namespace Yaapii.Xml
             //{
             return new Mapped<XElement, IXML>(
                 elem => new XMLQuery(elem),
-                FetchedNodes(xpQuery));
+                FetchedNodes(xpath));
             //}
             //catch (System.InvalidOperationException ex)
             //{
@@ -248,14 +252,14 @@ namespace Yaapii.Xml
         /// (use <code>xpath(..).get(0)</code>). But when/if you need to get more than
         /// just a plain text - use {@link #nodes(String)}.
         /// </para>
-        /// <para>The <see cref="IList{string}"/> returned will throw <see cref="IndexOutOfRangeException"/>
+        /// <para>The <see cref="IList"/> returned will throw <see cref="IndexOutOfRangeException"/>
         /// if you try to access a node which wasn't found by this XPath query.
         /// </para>
         /// <para>An IllegalArgumentException} is thrown if the parameter
         /// passed is not a valid XPath expression.
         /// </para>
         /// </summary>
-        /// <param name="query">The XPath query</param>
+        /// <param name="xpath">The XPath query</param>
         /// <returns>The list of string values(texts) or single function result</returns>
         public IList<string> Values(string xpath)
         {
@@ -433,6 +437,10 @@ namespace Yaapii.Xml
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Hashcode for this object.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return this._xml.GetHashCode();
