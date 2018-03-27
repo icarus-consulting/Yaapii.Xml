@@ -9,6 +9,7 @@ using Yaapii.Atoms.Fail;
 using Yaapii.Atoms.IO;
 using Yaapii.Atoms.Scalar;
 using Yaapii.Atoms.Text;
+using Yaapii.IO;
 
 namespace Yaapii.Xml
 {
