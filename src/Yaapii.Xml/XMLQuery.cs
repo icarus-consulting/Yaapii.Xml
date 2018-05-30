@@ -1,92 +1,90 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Yaapii.Atoms;
 using Yaapii.Atoms.IO;
+using Yaapii.Atoms.List;
 using Yaapii.Atoms.Scalar;
 using Yaapii.Atoms.Text;
-using System.Xml.XPath;
-using Yaapii.Atoms.List;
-using System.Collections;
-using System.Diagnostics;
-using System.Xml;
+using Yaapii.Xml.Xambly;
 
 namespace Yaapii.Xml
 {
-    /// <summary>
-    /// Provides access to a XML Document via XPath queries.
-    /// Type is <see cref="IXML"/>
-    /// </summary>
+    /// <summary> Provides access to a XML Document via XPath queries. Type is <see cref="IXML"/> </summary>
     public sealed class XMLQuery : IXML
     {
         private readonly IScalar<string> _xml;
 
-        /// <summary>
-        /// Is it a leaf node (= not a document node)?
-        /// </summary>
+        /// <summary> Is it a leaf node (= not a document node)? </summary>
         private readonly IScalar<bool> _isLeaf;
 
         private readonly IScalar<XNode> _cache;
-
         private readonly IScalar<IXmlNamespaceResolver> _context;
 
-        /// <summary>
-        /// XML from a XNode.
-        /// </summary>
-        /// <param name="node">XNode to make XML from</param>
+        /// <summary> Initializes Xml from Xambly Directives. </summary>
+        /// <param name="xamblyDirectives"> Xambly Directives to make Xml from </param>
+        public XMLQuery(IEnumerable<IDirective> xamblyDirectives)
+            : this(new Xambler(xamblyDirectives))
+        { }
+
+        /// <summary> Initializes Xml from a XmlNode. </summary>
+        /// <param name="node"> XmlNode to make Xml from </param>
+        public XMLQuery(XmlNode node)
+            : this(node.OuterXml)
+        { }
+
+        /// <summary> Initializes Xml from a Xambler. </summary>
+        /// <param name="xambler"> Xambler to make Xml from </param>
+        public XMLQuery(Xambler xambler)
+            : this(xambler.Xml())
+        { }
+
+        /// <summary> XML from a XNode. </summary>
+        /// <param name="node"> XNode to make XML from </param>
         public XMLQuery(XNode node) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(new XPathContext()),
             new StickyScalar<bool>(() => node.NodeType != System.Xml.XmlNodeType.Document))
         { }
 
-        /// <summary>
-        /// XML from a stream.
-        /// </summary>
-        /// <param name="stream">stream with xml text</param>
+        /// <summary> XML from a stream. </summary>
+        /// <param name="stream"> stream with xml text </param>
         public XMLQuery(Stream stream) : this(
             new TextOf(
                 new InputOf(stream)))
         { }
 
-        /// <summary>
-        /// XML from a url.
-        /// </summary>
-        /// <param name="url">url to ger xml text from</param>
+        /// <summary> XML from a url. </summary>
+        /// <param name="url"> url to ger xml text from </param>
         public XMLQuery(Url url) : this(
             new InputOf(url))
         { }
 
-        /// <summary>
-        /// XML from a file.
-        /// </summary>
-        /// <param name="file">file to get xml text from</param>
+        /// <summary> XML from a file. </summary>
+        /// <param name="file"> file to get xml text from </param>
         public XMLQuery(Uri file) : this(
             new InputOf(file))
         { }
 
-        /// <summary>
-        /// XML from <see cref="IInput"/>.
-        /// </summary>
-        /// <param name="input">XNode to make XML from</param>
+        /// <summary> XML from <see cref="IInput"/>. </summary>
+        /// <param name="input"> XNode to make XML from </param>
         public XMLQuery(IInput input) : this(
             new TextOf(input))
         { }
 
-        /// <summary>
-        /// XML from a string.
-        /// </summary>
-        /// <param name="text">xml as string</param>
+        /// <summary> XML from a string. </summary>
+        /// <param name="text"> xml as string </param>
         public XMLQuery(String text) : this(
             new TextOf(text))
         { }
 
-        /// <summary>
-        /// XML from <see cref="IText"/>
-        /// </summary>
-        /// <param name="text">xml as text</param>
+        /// <summary> XML from <see cref="IText"/> </summary>
+        /// <param name="text"> xml as text </param>
         public XMLQuery(IText text) : this(
             new StickyScalar<XNode>(() =>
             {
@@ -110,12 +108,10 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary>
-        /// XML from node and context, plus info whether it is a document or a node.
-        /// </summary>
-        /// <param name="node">xml as XNode</param>
-        /// <param name="context">context information about namespaces in the xml</param>
-        /// <param name="leaf">is it a document or a node</param>
+        /// <summary> XML from node and context, plus info whether it is a document or a node. </summary>
+        /// <param name="node"> xml as XNode </param>
+        /// <param name="context"> context information about namespaces in the xml </param>
+        /// <param name="leaf"> is it a document or a node </param>
         public XMLQuery(XNode node, IXmlNamespaceResolver context, bool leaf) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(context),
@@ -143,18 +139,14 @@ namespace Yaapii.Xml
             this._context = new StickyScalar<IXmlNamespaceResolver>(context);
         }
 
-        /// <summary>
-        /// The xml formatted as string.
-        /// </summary>
-        /// <returns>xml as string</returns>
+        /// <summary> The xml formatted as string. </summary>
+        /// <returns> xml as string </returns>
         public override sealed string ToString()
         {
             return this._xml.Value();
         }
 
-        /// <summary>
-        /// The xml as XNode.
-        /// </summary>
+        /// <summary> The xml as XNode. </summary>
         /// <returns></returns>
         public XNode Node()
         {
@@ -176,43 +168,29 @@ namespace Yaapii.Xml
         }
 
         /// <summary>
-        /// 
-        /// Retrieve DOM nodes from the XML response.
-        ///
-        /// <para>The <see cref="IList{IXML}"/>
-        /// returned will throw <see cref="IndexOutOfRangeException"/>
-        /// if you try to access a node which wasn't found by this XPath query.
+        /// Retrieve DOM nodes from the XML response. 
+        /// <para>
+        /// The <see cref="IList{IXML}"/> returned will throw <see cref="IndexOutOfRangeException"/> if you try to access a node
+        /// which wasn't found by this XPath query.
         /// </para>
-        /// <para>An <see cref="ArgumentException"/> is thrown if the parameter
-        /// passed is not a valid XPath expression.</para>
-        ///
+        /// <para> An <see cref="ArgumentException"/> is thrown if the parameter passed is not a valid XPath expression. </para>
         /// </summary>
-        /// <param name="xpath">The XPath query</param>
-        /// <returns>Collection of DOM nodes</returns>
+        /// <param name="xpath"> The XPath query </param>
+        /// <returns> Collection of DOM nodes </returns>
         public IList<IXML> Nodes(string xpath)
         {
-            // csa_180201: The InvalidOperationException is never fired here.
-            // FetchNodes returns a ListOf<XElement>(...) which is created by the result (IEnumerable<XElement>) of XPathSelectElements(...).
-            // Hence the execpion will be fired in the colling code which evaluates the Enumerator of this Nodes(...)
-            //try
-            //{
             return new Mapped<XElement, IXML>(
                 elem => new XMLQuery(elem),
                 FetchedNodes(xpath));
-            //}
-            //catch (System.InvalidOperationException ex)
-            //{
-            //    throw new InvalidOperationException("Could not evaluate xpath query. Did you try to read values (attributes) instead of nodes? Use method .Nodes(string xpath).", ex);
-            //}
         }
 
         /// <summary>
-        /// <para>Registers a new namespace to this xml.</para>
-        /// <para>You get back a XML with the new namespace - this one stays like it is.</para>
+        /// <para> Registers a new namespace to this xml. </para>
+        /// <para> You get back a XML with the new namespace - this one stays like it is. </para>
         /// </summary>
-        /// <param name="prefix">namespace prefix</param>
-        /// <param name="uri">namespace uri</param>
-        /// <returns>xml with the namespace registered</returns>
+        /// <param name="prefix"> namespace prefix </param>
+        /// <param name="uri"> namespace uri </param>
+        /// <returns> xml with the namespace registered </returns>
         public IXML WithNamespace(string prefix, object uri)
         {
             return
@@ -228,39 +206,35 @@ namespace Yaapii.Xml
         }
 
         /// <summary>
-        ///
-        /// Find and return text elements or attributes matched by XPath address.
-        ///
-        /// <para>The XPath query should point to text elements or attributes in the
-        /// XML document. If any nodes of different types (elements, comments, etc.)
-        /// are found in result node list -
-        /// a <see cref="Exception"/> will be thrown.
+        /// Find and return text elements or attributes matched by XPath address. 
+        /// <para>
+        /// The XPath query should point to text elements or attributes in the XML document. If any nodes of different types
+        /// (elements, comments, etc.) are found in result node list - a <see cref="Exception"/> will be thrown.
         /// </para>
-        /// <para>Alternatively, the XPath query can be a function or expression that
-        /// returns a single value instead of pointing to a set of nodes. In this
-        /// case, the result will be a List containing a single String, the content
-        /// of which is the result of the evaluation. If the expression result is not
-        /// a String, it will be converted to a String representation and returned as
-        /// such. For example, a document containing three &lt;a&gt; elements,
-        /// the input query "count(//a)", will return a singleton List with a single
-        /// string value "3".
+        /// <para>
+        /// Alternatively, the XPath query can be a function or expression that returns a single value instead of pointing to a
+        /// set of nodes. In this case, the result will be a List containing a single String, the content of which is the result
+        /// of the evaluation. If the expression result is not a String, it will be converted to a String representation and
+        /// returned as such. For example, a document containing three &lt;a&gt; elements, the input query "count(//a)", will
+        /// return a singleton List with a single string value "3".
         /// </para>
-        /// <para>This is a convenient method, which is used (according to our
-        /// experience) in 95% of all cases. Usually you don't need to get anything
-        /// else but a text value of some node or an attribute. And in most cases
-        /// you are interested to get just the first value
-        /// (use <code>xpath(..).get(0)</code>). But when/if you need to get more than
-        /// just a plain text - use {@link #nodes(String)}.
+        /// <para>
+        /// This is a convenient method, which is used (according to our
+        /// experience) in 95% of all cases. Usually you don't need to get anything else but a text value of some node or an
+        /// attribute. And in most cases you are interested to get just the first value (use
+        /// <code>
+        /// xpath(..).get(0)
+        /// </code>
+        /// ). But when/if you need to get more than just a plain text - use {@link #nodes(String)}. 
         /// </para>
-        /// <para>The <see cref="IList"/> returned will throw <see cref="IndexOutOfRangeException"/>
-        /// if you try to access a node which wasn't found by this XPath query.
+        /// <para>
+        /// The <see cref="IList"/> returned will throw <see cref="IndexOutOfRangeException"/> if you try to access a node which
+        /// wasn't found by this XPath query.
         /// </para>
-        /// <para>An IllegalArgumentException} is thrown if the parameter
-        /// passed is not a valid XPath expression.
-        /// </para>
+        /// <para> An IllegalArgumentException} is thrown if the parameter passed is not a valid XPath expression. </para>
         /// </summary>
-        /// <param name="xpath">The XPath query</param>
-        /// <returns>The list of string values(texts) or single function result</returns>
+        /// <param name="xpath"> The XPath query </param>
+        /// <returns> The list of string values(texts) or single function result </returns>
         public IList<string> Values(string xpath)
         {
             IList<string> items;
@@ -268,17 +242,6 @@ namespace Yaapii.Xml
             {
                 items = this.FetchedValues(xpath);
             }
-            // csa_180201: This exception can never be rise here. It is allready catched and transfromend to an ArgumentExecption in the FetchedValues() method.
-            //catch (XPathException exp)
-            //{
-            //    throw new ArgumentException(
-            //        new FormattedText(
-            //            "Invalid XPath query '{0}': {1}",
-            //            xpath,
-            //            exp.Message
-            //        ).AsString(),
-            //        exp);
-            //}
             catch (System.InvalidOperationException ex)
             {
                 throw new InvalidOperationException("Could not perform xpath query. Did you try to read nodes instead of values (attributes) ? Use method .Values(string xpath).", ex);
@@ -289,11 +252,9 @@ namespace Yaapii.Xml
             //return new ListWrapper<string>(items, this._cache.Value().ToString(), xpath);
         }
 
-        /// <summary>
-        /// Nodes fetched using the xpath query.
-        /// </summary>
-        /// <param name="xpath">xpath query</param>
-        /// <returns>list of elements matching the xpath</returns>
+        /// <summary> Nodes fetched using the xpath query. </summary>
+        /// <param name="xpath"> xpath query </param>
+        /// <returns> list of elements matching the xpath </returns>
         private IList<XElement> FetchedNodes(string xpath)
         {
             try
@@ -317,11 +278,9 @@ namespace Yaapii.Xml
             }
         }
 
-        /// <summary>
-        /// Values fetched using the xpath query.
-        /// </summary>
-        /// <param name="xpath">xpath query</param>
-        /// <returns>list of values</returns>
+        /// <summary> Values fetched using the xpath query. </summary>
+        /// <param name="xpath"> xpath query </param>
+        /// <returns> list of values </returns>
         private IList<string> FetchedValues(string xpath)
         {
             IList<string> result = new List<string>();
@@ -386,9 +345,7 @@ namespace Yaapii.Xml
             return result;
         }
 
-        /// <summary>
-        /// Extracted value from XObject.
-        /// </summary>
+        /// <summary> Extracted value from XObject. </summary>
         /// <param name="xObject"></param>
         /// <returns></returns>
         private string ValueFrom(XObject xObject)
@@ -422,11 +379,9 @@ namespace Yaapii.Xml
             return result;
         }
 
-        /// <summary>
-        /// Exact equality test, regarding whitespaces and blanks.
-        /// </summary>
-        /// <param name="obj">to compare to</param>
-        /// <returns>true if equal</returns>
+        /// <summary> Exact equality test, regarding whitespaces and blanks. </summary>
+        /// <param name="obj"> to compare to </param>
+        /// <returns> true if equal </returns>
         public override bool Equals(object obj)
         {
             if (!(obj is XMLQuery)) return false;
@@ -437,9 +392,7 @@ namespace Yaapii.Xml
             return left.Equals(right);
         }
 
-        /// <summary>
-        /// Hashcode for this object.
-        /// </summary>
+        /// <summary> Hashcode for this object. </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
