@@ -27,7 +27,7 @@ var version							= "0.1.1";
 ///////////////////////////////////////////////////////////////////////////////
 var isAppVeyor          = AppVeyor.IsRunningOnAppVeyor;
 var isWindows           = IsRunningOnWindows();
-var netcore             = "netcoreapp2.0";
+var netcore             = "netcoreapp2.1";
 var net                 = "net461";
 var netstandard         = "netstandard2.0";
 
