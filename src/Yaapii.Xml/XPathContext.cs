@@ -14,8 +14,8 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XPathContext : IXmlNamespaceResolver
     {
-        private readonly IEnumerable<IScalar<IXmlNamespaceResolver>> _contexts;
-        private readonly IDictionary<string, string> _map;
+        private readonly IEnumerable<IScalar<IXmlNamespaceResolver>> contexts;
+        private readonly IDictionary<string, string> map;
 
         private const string XML_NS_PREFIX = "xml";
         private const string XML_NS_URI = "http://www.w3.org/XML/1998/namespace";
@@ -113,8 +113,8 @@ namespace Yaapii.Xml
         /// <param name="contexts">existing contexts</param>
         private XPathContext(IDictionary<string, string> map, IEnumerable<IScalar<IXmlNamespaceResolver>> contexts)
         {
-            _map = map;
-            _contexts = contexts;
+            this.map = map;
+            this.contexts = contexts;
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Yaapii.Xml
         {
             IDictionary<string, string> result = new Dictionary<string, string>();
 
-            foreach (var kvp in this._map)
+            foreach (var kvp in this.map)
             {
                 if (scope != XmlNamespaceScope.ExcludeXml
                     ||
@@ -178,7 +178,7 @@ namespace Yaapii.Xml
                 }
             }
 
-            foreach (var ctx in this._contexts)
+            foreach (var ctx in this.contexts)
             {
                 IEnumerable<KeyValuePair<string, string>> namespaces =
                     ctx.Value().GetNamespacesInScope(scope);
@@ -199,7 +199,7 @@ namespace Yaapii.Xml
                     ", ",
                     new Mapped<KeyValuePair<string, string>, string>(
                         pair => pair.Key + "=" + pair.Value,
-                        this._map
+                        this.map
                     )
                 );
         }
@@ -212,9 +212,9 @@ namespace Yaapii.Xml
         private IEnumerable<string> FromMap(string prefix)
         {
             var ns = new EnumerableOf<string>();
-            if (this._map.ContainsKey(prefix))
+            if (this.map.ContainsKey(prefix))
             {
-                ns = new EnumerableOf<string>(this._map[prefix]);
+                ns = new EnumerableOf<string>(this.map[prefix]);
             }
             return ns;
         }
@@ -227,7 +227,7 @@ namespace Yaapii.Xml
         private IEnumerable<string> FromContexts(string prefix)
         {
             IEnumerable<string> ns = new EnumerableOf<string>();
-            foreach (IScalar<IXmlNamespaceResolver> ctx in this._contexts)
+            foreach (IScalar<IXmlNamespaceResolver> ctx in this.contexts)
             {
                 string uri = ctx.Value().LookupNamespace(prefix);
                 if (uri != null)

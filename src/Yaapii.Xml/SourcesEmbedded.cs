@@ -17,8 +17,8 @@ namespace Yaapii.Xml
     /// </summary>
     public class SourcesEmbedded : XmlResolver
     {
-        private readonly IEnumerable<string> _folders;
-        private readonly IScalar<Assembly> _asm;
+        private readonly IEnumerable<string> folders;
+        private readonly IScalar<Assembly> asm;
 
         /// <summary>
         /// Sources (for example XSL files) embedded in a assembly.
@@ -40,8 +40,8 @@ namespace Yaapii.Xml
 
         private SourcesEmbedded(IScalar<Assembly> asm, params string[] folders)
         {
-            _folders = new Joined<string>(new EnumerableOf<string>(""), new EnumerableOf<string>(folders));
-            _asm = asm;
+            this.folders = new Joined<string>(new EnumerableOf<string>(""), new EnumerableOf<string>(folders));
+            this.asm = asm;
         }
 
         /// <summary>
@@ -56,14 +56,14 @@ namespace Yaapii.Xml
             var res = Path.GetFileName(absoluteUri.AbsolutePath);
             var stream = Stream.Null;
 
-            foreach (var folder in _folders)
+            foreach (var folder in folders)
             {
                 try
                 {
                     stream =
                         new ResourceOf(
                             folder != String.Empty ? folder + "/" + res : res,
-                            _asm
+                            asm
                         ).Stream();
                 }
                 catch (Exception) {  /* go on... */ }

@@ -238,7 +238,7 @@ namespace Yaapii.Xml.Test
                     "<root><item1/><item2/><item3/></root>"
                 );
 
-            IXML item = doc.Nodes("//root/item2")[0];
+            IXML item = doc.Nodes("/root/item2")[0];
             Assert.Equal(
                 "root",
                 item.Nodes("..")[0].Values("name()")[0]);
@@ -344,6 +344,19 @@ namespace Yaapii.Xml.Test
 
             Assert.Empty(root.Values("/z9[@a='432']"));
 
+        }
+
+        [Fact]
+        public void NodesCanBeInterlaced()
+        {
+            IXML doc =
+                new XMLQuery(
+                    "<root><item1><subitem1/></item1><item2/><item3/></root>");
+            
+            Assert.Equal(
+                "subitem1",
+                doc.Nodes("/root/item1")[0].Nodes("./subitem1")[0].Values("name()")[0]
+            );
         }
     }
 }

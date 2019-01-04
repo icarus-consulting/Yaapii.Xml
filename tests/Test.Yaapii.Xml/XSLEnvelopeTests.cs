@@ -7,7 +7,7 @@ using Yaapii.Atoms.IO;
 using Yaapii.Atoms.Text;
 using Yaapii.Xml;
 
-namespace Test.Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
     public sealed class XSLEnvelopeTests
     {
