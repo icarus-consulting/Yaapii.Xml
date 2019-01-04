@@ -8,26 +8,26 @@ namespace Yaapii.Xml
     /// <summary> A legal XML character. </summary>
     public class NotIllegal : IScalar<Char>
     {
-        private readonly char _chr;
+        private readonly char chr;
 
         /// <summary> Validate char number and throw exception if it's not legal. </summary>
         /// <param name="chr"></param>
         /// <exception cref="XmlException"> If illegal </exception>
         public NotIllegal(char chr)
         {
-            this._chr = chr;
+            this.chr = chr;
         }
 
         /// <summary> Validate char number and throw exception if it's not legal. </summary>
         /// <returns> The same number </returns>
         public Char Value()
         {
-            this.Range(_chr, 0x00, 0x08);
-            this.Range(_chr, 0x0B, 0x0C);
-            this.Range(_chr, 0x0E, 0x1F);
-            this.Range(_chr, 0x7F, 0x84);
-            this.Range(_chr, 0x86, 0x9F);
-            return _chr;
+            this.Range(chr, 0x00, 0x08);
+            this.Range(chr, 0x0B, 0x0C);
+            this.Range(chr, 0x0E, 0x1F);
+            this.Range(chr, 0x7F, 0x84);
+            this.Range(chr, 0x86, 0x9F);
+            return chr;
         }
 
         /// <summary> Throw if number is in the range. </summary>

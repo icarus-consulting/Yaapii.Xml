@@ -4,7 +4,7 @@ using System.Text;
 using Xunit;
 using Yaapii.Xml;
 
-namespace Test.Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
     public sealed class NotIllegalTests
     {

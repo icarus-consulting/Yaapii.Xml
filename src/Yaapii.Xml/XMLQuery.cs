@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -11,37 +14,43 @@ using Yaapii.Atoms.IO;
 using Yaapii.Atoms.List;
 using Yaapii.Atoms.Scalar;
 using Yaapii.Atoms.Text;
-using Yaapii.Xml.Xambly;
+using Yaapii.Xambly;
 
 namespace Yaapii.Xml
 {
     /// <summary> Provides access to a XML Document via XPath queries. Type is <see cref="IXML"/> </summary>
     public sealed class XMLQuery : IXML
     {
-        private readonly IScalar<string> _xml;
+        private readonly IScalar<string> xml;
 
         /// <summary> Is it a leaf node (= not a document node)? </summary>
-        private readonly IScalar<bool> _isLeaf;
-
-        private readonly IScalar<XNode> _cache;
-        private readonly IScalar<IXmlNamespaceResolver> _context;
+        private readonly IScalar<bool> isLeaf;
+        private readonly IScalar<XNode> cache;
+        private readonly IScalar<IXmlNamespaceResolver> context;
+        private readonly Func<XNode, string> stringTransform;
 
         /// <summary> Initializes Xml from Xambly Directives. </summary>
-        /// <param name="xamblyDirectives"> Xambly Directives to make Xml from </param>
-        public XMLQuery(IEnumerable<IDirective> xamblyDirectives)
-            : this(new Xambler(xamblyDirectives))
+        /// <param name="patch"> Xambly patch </param>
+        public XMLQuery(IEnumerable<IDirective> patch) : this(
+            new Xambler(patch)
+        )
         { }
 
-        /// <summary> Initializes Xml from a XmlNode. </summary>
-        /// <param name="node"> XmlNode to make Xml from </param>
-        public XMLQuery(XmlNode node)
-            : this(node.OuterXml)
-        { }
+        ///// <summary> Initializes Xml from a XmlNode. </summary>
+        //public XMLQuery(XmlNode node) : this(
+        //    new TextOf(
+        //        new ScalarOf<string>(() => node.OuterXml)
+        //    )
+        //)
+        //{ }
 
         /// <summary> Initializes Xml from a Xambler. </summary>
         /// <param name="xambler"> Xambler to make Xml from </param>
-        public XMLQuery(Xambler xambler)
-            : this(xambler.Xml())
+        public XMLQuery(Xambler xambler) : this(
+            new TextOf(
+                new StickyScalar<string>(() => xambler.Xml())
+            )
+        )
         { }
 
         /// <summary> XML from a XNode. </summary>
@@ -121,36 +130,40 @@ namespace Yaapii.Xml
 
         private XMLQuery(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context, IScalar<bool> leaf)
         {
-            this._xml = new StickyScalar<string>(
+            this.stringTransform = nd =>
+            {
+                StringBuilder sb = new StringBuilder();
+                XmlWriterSettings xws = new XmlWriterSettings();
+                xws.OmitXmlDeclaration = nd.NodeType != XmlNodeType.Document;
+                xws.Indent = false;
+                using (XmlWriter xw = XmlWriter.Create(sb, xws))
+                {
+                    nd.Document.WriteTo(xw);
+                }
+                return sb.ToString();
+            };
+            this.xml = new StickyScalar<string>(
                 () =>
                 {
-                    StringBuilder sb = new StringBuilder();
-                    XmlWriterSettings xws = new XmlWriterSettings();
-                    xws.OmitXmlDeclaration = node.Value().NodeType != XmlNodeType.Document;
-                    xws.Indent = false;
-                    using (XmlWriter xw = XmlWriter.Create(sb, xws))
-                    {
-                        node.Value().Document.WriteTo(xw);
-                    }
-                    return sb.ToString();
+                    return this.stringTransform.Invoke(node.Value());
                 });
-            this._isLeaf = new StickyScalar<bool>(leaf);
-            this._cache = new StickyScalar<XNode>(node);
-            this._context = new StickyScalar<IXmlNamespaceResolver>(context);
+            this.isLeaf = new StickyScalar<bool>(leaf);
+            this.cache = new StickyScalar<XNode>(node);
+            this.context = new StickyScalar<IXmlNamespaceResolver>(context);
         }
 
         /// <summary> The xml formatted as string. </summary>
         /// <returns> xml as string </returns>
         public override sealed string ToString()
         {
-            return this._xml.Value();
+            return this.stringTransform.Invoke(this.Node());
         }
 
         /// <summary> The xml as XNode. </summary>
         /// <returns></returns>
         public XNode Node()
         {
-            var casted = this._cache.Value();
+            var casted = this.cache.Value();
             XNode answer = null;
 
             if (casted.NodeType == XmlNodeType.Document)
@@ -179,11 +192,30 @@ namespace Yaapii.Xml
         /// <returns> Collection of DOM nodes </returns>
         public IList<IXML> Nodes(string xpath)
         {
-            return new Mapped<XElement, IXML>(
-                elem => new XMLQuery(elem),
-                FetchedNodes(xpath));
+            try
+            {
+                var el = this.cache.Value().XPathSelectElements(xpath, this.context.Value());
+                var mapped =
+                    new Mapped<XElement, IXML>(
+                        elem => new XMLQuery(elem),
+                        el
+                    );
+                return mapped;
+            }
+            catch (XPathException ex)
+            {
+                throw
+                    new ArgumentException(
+                        new FormattedText(
+                            "Invalid XPath expression '{0}': {1}",
+                            xpath,
+                            ex.Message
+                        ).AsString(),
+                        ex
+                    );
+            }
         }
-
+        
         /// <summary>
         /// <para> Registers a new namespace to this xml. </para>
         /// <para> You get back a XML with the new namespace - this one stays like it is. </para>
@@ -195,13 +227,13 @@ namespace Yaapii.Xml
         {
             return
                 new XMLQuery(
-                    this._cache.Value(),
+                    this.cache.Value(),
                     new XPathContext(
-                        this._context.Value().GetNamespacesInScope(XmlNamespaceScope.All),
+                        this.context.Value().GetNamespacesInScope(XmlNamespaceScope.All),
                         prefix,
                         uri.ToString()
                     ),
-                    this._isLeaf.Value()
+                    this.isLeaf.Value()
                 );
         }
 
@@ -240,55 +272,9 @@ namespace Yaapii.Xml
             IList<string> items;
             try
             {
-                items = this.FetchedValues(xpath);
-            }
-            catch (System.InvalidOperationException ex)
-            {
-                throw new InvalidOperationException("Could not perform xpath query. Did you try to read nodes instead of values (attributes) ? Use method .Values(string xpath).", ex);
-            }
-
-            return items;
-
-            //return new ListWrapper<string>(items, this._cache.Value().ToString(), xpath);
-        }
-
-        /// <summary> Nodes fetched using the xpath query. </summary>
-        /// <param name="xpath"> xpath query </param>
-        /// <returns> list of elements matching the xpath </returns>
-        private IList<XElement> FetchedNodes(string xpath)
-        {
-            try
-            {
-                return
-                    new ListOf<XElement>(
-                        this._cache.Value().XPathSelectElements(xpath, this._context.Value())
-                    );
-            }
-            catch (XPathException ex)
-            {
-                throw
-                    new ArgumentException(
-                        new FormattedText(
-                            "Invalid XPath expression '{0}': {1}",
-                            xpath,
-                            ex.Message
-                        ).AsString(),
-                        ex
-                    );
-            }
-        }
-
-        /// <summary> Values fetched using the xpath query. </summary>
-        /// <param name="xpath"> xpath query </param>
-        /// <returns> list of values </returns>
-        private IList<string> FetchedValues(string xpath)
-        {
-            IList<string> result = new List<string>();
-            try
-            {
-                //var eval = this._cache.Value().XPathEvaluate(xpath, this._context.Value());
-                //@Todo: this fixes the issue #430 but the behavior is strange. The method should also work in the chache variable
-                var eval = this.Node().XPathEvaluate(xpath, this._context.Value());
+                //items = this.FetchedValues(xpath);
+                var result = new List<string>();
+                var eval = this.Node().XPathEvaluate(xpath, this.context.Value());
 
                 if (eval is string || eval is double || eval is bool) //necessary because of XPathEvaluate implementation in C#
                 {
@@ -318,6 +304,7 @@ namespace Yaapii.Xml
                         new Exception(
                             new FormattedText("Unexpected xpath result type '{0}'", eval.GetType().Name).AsString());
                 }
+                items = result;
             }
             catch (ArgumentException aex)
             {
@@ -342,7 +329,12 @@ namespace Yaapii.Xml
                         ex
                     );
             }
-            return result;
+            catch (System.InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Could not perform xpath query. Did you try to read nodes instead of values (attributes) ? Use method .Values(string xpath).", ex);
+            }
+
+            return items;
         }
 
         /// <summary> Extracted value from XObject. </summary>
@@ -386,7 +378,7 @@ namespace Yaapii.Xml
         {
             if (!(obj is XMLQuery)) return false;
 
-            var left = this._xml.Value().ToString();
+            var left = this.xml.Value().ToString();
             var right = (obj as XMLQuery).ToString();
 
             return left.Equals(right);
@@ -396,7 +388,7 @@ namespace Yaapii.Xml
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return this._xml.GetHashCode();
+            return this.xml.GetHashCode();
         }
     }
 }

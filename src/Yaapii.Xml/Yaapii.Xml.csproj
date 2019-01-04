@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCpu'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>artifacts\Yaapii.Xml.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -36,16 +36,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\example-schema.xsd" />
+    <None Remove="Assets\example.xml" />
     <None Remove="Resources\strip.xsl" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\example-schema.xsd" />
+    <EmbeddedResource Include="Assets\example.xml" />
     <EmbeddedResource Include="Resources\strip.xsl" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="0.13.0" />
-    <PackageReference Include="Yaapii.Xambly" Version="0.5.0" />
+    <PackageReference Include="Yaapii.Atoms" Version="0.20.0" />
+    <PackageReference Include="Yaapii.Xambly" Version="0.6.3" />
   </ItemGroup>
 
 </Project>

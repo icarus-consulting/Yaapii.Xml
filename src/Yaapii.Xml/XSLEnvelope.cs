@@ -19,17 +19,17 @@ namespace Yaapii.Xml
         /// <summary>
         /// XSL Document.
         /// </summary>
-        private readonly IText _xsl;
+        private readonly IText xsl;
 
         /// <summary>
         /// Stylesheet params.
         /// </summary>
-        private readonly IDictionary<string, object> _params;
+        private readonly IDictionary<string, object> @params;
 
         /// <summary>
         /// Stylesheet Sources.
         /// </summary>
-        private readonly XmlResolver _sources;
+        private readonly XmlResolver sources;
 
         /// <summary>
         /// 
@@ -40,9 +40,9 @@ namespace Yaapii.Xml
         /// <param name="bse"></param>
         public XSLEnvelope(IText src, XmlResolver sources, IDictionary<string, object> map)
         {
-            this._xsl = src;
-            this._sources = sources;
-            this._params = map;
+            this.xsl = src;
+            this.sources = sources;
+            this.@params = map;
         }
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace Yaapii.Xml
         public IXSL With(string name, object value)
         {
             return new XSLDocument(
-                this._xsl,
-                this._sources,
+                this.xsl,
+                this.sources,
                 new MapOf<string, object>(
-                    this._params,
+                    this.@params,
                     new KeyValuePair<string, object>(
                         name, value)
                     )
@@ -122,7 +122,7 @@ namespace Yaapii.Xml
         /// <returns></returns>
         public override string ToString()
         {
-            return new XMLQuery(this._xsl).ToString();
+            return new XMLQuery(this.xsl).ToString();
         }
 
         /// <summary>
@@ -136,10 +136,10 @@ namespace Yaapii.Xml
             var sets = new XsltSettings(true, true);
             xslt.Load(
                 XmlReader.Create(
-                    new StringReader(this._xsl.AsString())
+                    new StringReader(this.xsl.AsString())
                 ),
                 sets,
-                _sources
+                sources
             );
 
             return xslt;
@@ -162,7 +162,7 @@ namespace Yaapii.Xml
                         new FormattedText(
                             "invalid xslt: {0}\r\nContent:\r\n {1}",
                             xex.Message + (xex.InnerException != null ? ", " + xex.InnerException.Message : ""),
-                            this._xsl.AsString()
+                            this.xsl.AsString()
                         ).AsString(),
                         xex
                     );
@@ -172,7 +172,7 @@ namespace Yaapii.Xml
         private XsltArgumentList Params()
         {
             var args = new XsltArgumentList();
-            foreach (var kvp in this._params)
+            foreach (var kvp in this.@params)
             {
                 args.AddParam(kvp.Key, "", kvp.Value);
             }
@@ -181,7 +181,7 @@ namespace Yaapii.Xml
 
         public IXSL With(XmlResolver sources)
         {
-            return new XSLDocument(this._xsl, sources, this._params);
+            return new XSLDocument(this.xsl, sources, this.@params);
         }
     }
 }

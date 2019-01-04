@@ -6,7 +6,7 @@ using Xunit;
 using Yaapii.Atoms.Enumerable;
 using Yaapii.Xml;
 
-namespace Test.Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
     public sealed class XPathContextTests
     {

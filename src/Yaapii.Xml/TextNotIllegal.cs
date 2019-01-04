@@ -10,16 +10,16 @@ namespace Yaapii.Xml
     /// </summary>
     public class TextNotIllegal : IText
     {
-        private readonly IText _txt;
+        private readonly IText txt;
 
         public TextNotIllegal(IText txt)
         {
-            _txt = txt;
+            this.txt = txt;
         }
 
         public string AsString()
         {
-            var str = _txt.AsString();
+            var str = txt.AsString();
             foreach(var c in str)
             {
                 new NotIllegal(c).Value();
@@ -29,7 +29,7 @@ namespace Yaapii.Xml
 
         public bool Equals(IText other)
         {
-            return _txt.Equals(other);
+            return txt.Equals(other);
         }
     }
 }
