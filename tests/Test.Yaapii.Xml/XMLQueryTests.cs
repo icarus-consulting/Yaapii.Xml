@@ -325,6 +325,18 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
+        public void PreservesNodeWhenAccessingValue()
+        {
+            IXML xml = new XMLQuery("<r1><a><b>1</b></a><a><b>2</b></a></r1>");
+
+            foreach(var node in xml.Nodes("/r1/a/b"))
+            {
+                //This was a usecase where the bug occured. Count was 1.
+                Assert.Equal(0, node.Values("/b/text()").Count);
+            }
+        }
+
+        [Fact]
         public void AppliesXpathToClonedNode()
         {
             IXML xml = new XMLQuery("<t6><z9 a='433'/></t6>");
