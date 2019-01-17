@@ -113,7 +113,8 @@ Task("Generate-Coverage")
 	{
 		var projectsToCover = new [] {
                 ypXmlTests
-			};
+		};
+
         var dotNetCoreTestSettings =
             new DotNetCoreTestSettings
             {
@@ -245,24 +246,23 @@ Task("Release")
   .IsDependentOn("GetAuth")
   .Does(() => {
      GitReleaseManagerCreate(githubToken, owner, repository, new GitReleaseManagerCreateSettings {
-            Milestone         = version,
-            Name              = version,
-            Prerelease        = false,
-            TargetCommitish   = "master"
+        Milestone         = version,
+        Name              = version,
+        Prerelease        = false,
+        TargetCommitish   = "master"
     });
 
-	var nugetFiles = string.Join(";", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
+	var nugetFiles = string.Join(", ", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
 	Information("Nuget artifacts: " + nugetFiles);
 
 	GitReleaseManagerAddAssets(
-		githubToken
+		githubToken,
 		owner,
 		repository,
 		version,
 		nugetFiles
-		);
-	}
-);
+	);
+});
 
 Task("Default")
   .IsDependentOn("Build Yaapii")
