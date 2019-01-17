@@ -262,6 +262,8 @@ Task("Release")
 		version,
 		nugetFiles
 	);
+
+	GitReleaseManagerPublish(githubToken, owner, repository, version);
 });
 
 Task("Default")
