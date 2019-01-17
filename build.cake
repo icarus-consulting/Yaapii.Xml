@@ -35,8 +35,7 @@ var netstandard         = "netstandard2.0";
 var owner = "icarus-consulting";
 var repository = "Yaapii.Xml";
 
-var username = "";
-var password = "";
+var githubToken = "";
 var codecovToken = "";
 
 
@@ -114,7 +113,8 @@ Task("Generate-Coverage")
 	{
 		var projectsToCover = new [] {
                 ypXmlTests
-			};
+		};
+
         var dotNetCoreTestSettings =
             new DotNetCoreTestSettings
             {
@@ -162,7 +162,7 @@ Task("Generate-Coverage-Report")
 
 Task("Upload-Coverage")
 .IsDependentOn("Generate-Coverage")
-.IsDependentOn("GetCredentials")
+.IsDependentOn("GetAuth")
 .WithCriteria(() => isAppVeyor)
 .Does(() =>
 {
@@ -231,12 +231,11 @@ Task("Pack")
 ///////////////////////////////////////////////////////////////////////////////
 // Release
 ///////////////////////////////////////////////////////////////////////////////
-Task("GetCredentials")
+Task("GetAuth")
 	.WithCriteria(() => isAppVeyor)
     .Does(() =>
 {
-    username = EnvironmentVariable("GITHUB_USERNAME");
-    password = EnvironmentVariable("GITHUB_PASSWORD");
+    githubToken = EnvironmentVariable("GITHUB_TOKEN");
 	codecovToken = EnvironmentVariable("CODECOV_TOKEN");
 });
 
@@ -244,27 +243,28 @@ Task("Release")
   .WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
   .IsDependentOn("Version")
   .IsDependentOn("Pack")
-  .IsDependentOn("GetCredentials")
+  .IsDependentOn("GetAuth")
   .Does(() => {
-     GitReleaseManagerCreate(username, password, owner, repository, new GitReleaseManagerCreateSettings {
-            Milestone         = version,
-            Name              = version,
-            Prerelease        = false,
-            TargetCommitish   = "master"
+     GitReleaseManagerCreate(githubToken, owner, repository, new GitReleaseManagerCreateSettings {
+        Milestone         = version,
+        Name              = version,
+        Prerelease        = false,
+        TargetCommitish   = "master"
     });
 
-	var nugetFiles = string.Join(";", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
+	var nugetFiles = string.Join(", ", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
 	Information("Nuget artifacts: " + nugetFiles);
 
 	GitReleaseManagerAddAssets(
-		username,
-		password,
+		githubToken,
 		owner,
 		repository,
 		version,
 		nugetFiles
-		);
-	});
+	);
+
+	GitReleaseManagerPublish(githubToken, owner, repository, version);
+});
 
 Task("Default")
   .IsDependentOn("Build Yaapii")

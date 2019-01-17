@@ -36,15 +36,7 @@ namespace Yaapii.Xml
         )
         { }
 
-        ///// <summary> Initializes Xml from a XmlNode. </summary>
-        //public XMLQuery(XmlNode node) : this(
-        //    new TextOf(
-        //        new ScalarOf<string>(() => node.OuterXml)
-        //    )
-        //)
-        //{ }
-
-        /// <summary> Initializes Xml from a Xambler. </summary>
+        /// <summary> Xml from a Xambler. </summary>
         /// <param name="xambler"> Xambler to make Xml from </param>
         public XMLQuery(Xambler xambler) : this(
             new TextOf(
@@ -272,9 +264,8 @@ namespace Yaapii.Xml
             IList<string> items;
             try
             {
-                //items = this.FetchedValues(xpath);
                 var result = new List<string>();
-                var eval = this.Node().XPathEvaluate(xpath, this.context.Value());
+                var eval = this.cache.Value().XPathEvaluate(xpath, this.context.Value());
 
                 if (eval is string || eval is double || eval is bool) //necessary because of XPathEvaluate implementation in C#
                 {
