@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="0.21.0" />
+    <PackageReference Include="Yaapii.Atoms" Version="0.22.0" />
     <PackageReference Include="Yaapii.Xambly" Version="0.7.0" />
   </ItemGroup>
 
