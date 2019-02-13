@@ -1,62 +1,76 @@
 ﻿using System;
 using Yaapii.Atoms;
-using Yaapii.Atoms.Enumerable;
-using Yaapii.Atoms.Scalar;
 using Yaapii.Atoms.Text;
 using Yaapii.Xml.Error;
 
 namespace Yaapii.Xml
 {
+    /// <summary>
+    /// A string in a document, retrieved by xpath.
+    /// </summary>
     public sealed class XMLString : IScalar<string>
     {
-        private readonly IXML document;
+        private readonly IXML xml;
         private readonly string xpath;
-        private readonly IScalar<Exception> ex;
+        private readonly Func<string> fallback;
 
-        public XMLString(IXML document, string xpath) : this(
-            document,
-            xpath,
-            new StickyScalar<Exception>(() =>
-                new XPathNotFoundException(
-                    new FormattedText(
-                        "XPath '{0}' not found in document: {1}",
-                        xpath,
-                        document.Node().ToString()
-                    ).AsString()
-                )
-            )
+        /// <summary>
+        /// A string in a document, retrieved by xpath.
+        /// </summary>
+        public XMLString(IXML xml, string xpath) : this(xml, xpath, 
+            () =>
+            {
+                throw
+                    new ArgumentException(
+                        new FormattedText(
+                            $"Cannot retrieve single value with XPath '{0}', because it had no results in document{Environment.NewLine} {1}",
+                            xpath,
+                            xml.AsNode().ToString()
+                        ).AsString()
+                    );
+            }
         )
         { }
 
-        public XMLString(IXML document, string xpath, string hint) : this(
-            document,
-            xpath,
-            new Exception(hint)
-        )
+        /// <summary>
+        /// A string in a document, retrieved by xpath.
+        /// </summary>
+        public XMLString(IXML xml, string xpath, string def) : this(xml, xpath, () => def)
         { }
 
-        public XMLString(IXML document, string xpath, Exception ex) : this(
-            document,
-            xpath,
-            new ScalarOf<Exception>(ex)
-        )
-        { }
-
-        private XMLString(IXML document, string xpath, IScalar<Exception> ex)
+        /// <summary>
+        /// A string in a document, retrieved by xpath.
+        /// </summary>
+        internal XMLString(IXML xml, string xpath, Func<string> fallback)
         {
-            this.document = document;
+            this.xml = xml;
             this.xpath = xpath;
-            this.ex = ex;
+            this.fallback = fallback;
         }
 
+        /// <summary>
+        /// A string in a document, retrieved by xpath.
+        /// </summary>
         public string Value()
         {
-            var results = this.document.Values(xpath);
-            if (new LengthOf(results).Value() < 1)
+            var matches = this.xml.Values(xpath);
+            var result = string.Empty;
+            if (matches.Count < 1)
             {
-                throw this.ex.Value();
+                result = this.fallback();
             }
-            return new ItemAt<string>(results).Value();
+            else if(matches.Count > 1)
+            {
+                throw 
+                    new ArgumentException(
+                        $"Cannot extract single value with xpath {this.xpath} because it resulted in multiple values in document {xml.ToString()}"
+                    );
+            }
+            else
+            {
+                result = matches[0];
+            }
+            return result;
         }
     }
 }

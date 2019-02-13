@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Yaapii.Xambly;
 
@@ -29,7 +27,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void ThrowsGivenException()
+        public void RejectsNoResults()
         {
             var doc =
                 new XMLPatched(
@@ -41,14 +39,13 @@ namespace Yaapii.Xml.Test
             Assert.Throws<ArgumentException>(() =>
                 new XMLString(
                     doc,
-                    "/wrong/text()",
-                    new ArgumentException("Wrong xpath")
+                    "/wrong/text()"
                 ).Value()
             );
         }
 
         [Fact]
-        public void ThrowsGivenHint()
+        public void ReturnsFallback()
         {
             var doc =
                 new XMLPatched(
@@ -57,21 +54,15 @@ namespace Yaapii.Xml.Test
                         .Xpath("/root")
                         .Set("ugly_text")
                 );
-            try
-            {
-                new XMLString(
-                    doc,
-                    "/wrong/text()",
-                    "Unable to access the text of root node"
-                ).Value();
-            }
-            catch (Exception ex)
-            {
+
                 Assert.Equal(
-                    "Unable to access the text of root node",
-                    ex.Message
+                    "right text",
+                    new XMLString(
+                        doc,
+                        "/wrong/text()",
+                        "right text"
+                    ).Value()
                 );
-            }
         }
     }
 }
