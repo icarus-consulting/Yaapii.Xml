@@ -23,7 +23,7 @@ namespace Yaapii.Xml.Test
 
             Assert.Equal(
                 1, 
-                xsl.Transformed(new XMLQuery(xml)).Nodes("/done").Count
+                xsl.Transformed(new XMLCursor(xml)).Nodes("/done").Count
             );
         }
 
@@ -45,7 +45,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 1,
                 xsl.Transformed(
-                    new XMLQuery(
+                    new XMLCursor(
                         "<simple-test/>"
                     )
                 ).Nodes("/result[.=6]").Count
@@ -65,7 +65,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "hello",
                 xsl.TransformedToText(
-                    new XMLQuery("<something/>")
+                    new XMLCursor("<something/>")
                 )
             );
         }
@@ -86,7 +86,7 @@ namespace Yaapii.Xml.Test
                 "[Donny]",
                 xsl
                     .With("boom", "Donny")
-                    .TransformedToText(new XMLQuery("<ehe/>"))
+                    .TransformedToText(new XMLCursor("<ehe/>"))
             );
         }
 
@@ -106,7 +106,7 @@ namespace Yaapii.Xml.Test
                 "+1+",
                 xsl
                     .With("faa", 1)
-                    .TransformedToText(new XMLQuery("<r0/>"))
+                    .TransformedToText(new XMLCursor("<r0/>"))
             );
         }
     }

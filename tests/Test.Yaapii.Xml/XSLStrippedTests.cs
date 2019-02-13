@@ -13,7 +13,7 @@ namespace Yaapii.Xml.Test
         {
             Assert.True(
             new XSLStripped().Transformed(
-                new XMLQuery("<a>   <b/>  </a>")
+                new XMLCursor("<a>   <b/>  </a>")
             ).ToString() ==
             new StringBuilder()
                 .Append("<?xml version=\"1.0\" encoding=\"utf-16\"?>") //mtu\unsure about this: should it be here or not? I think, the input is NOT a document so normally the declaration should not appear.
