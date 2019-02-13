@@ -1,4 +1,26 @@
-﻿using System;
+﻿// MIT License
+//
+// Copyright(c) 2019 ICARUS Consulting GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -28,19 +50,6 @@ namespace Yaapii.Xml
         /// such. For example, a document containing three &lt;a&gt; elements,
         /// the input query "count(//a)", will return a singleton List with a single
         /// string value "3".
-        ///</para>
-        /// <para>This is a convenient method, which is used (according to our
-        /// experience) in 95% of all cases. Usually you don't need to get anything
-        /// else but a text value of some node or an attribute. And in most cases
-        /// you are interested to get just the first value
-        /// (use <code>xpath(..).get(0)</code>). But when/if you need to get more than
-        /// just a plain text - use {@link #nodes(String)}.
-        ///</para>
-        /// <para>The <see cref="IList"/> returned will throw <see cref="IndexOutOfRangeException"/>
-        /// if you try to access a node which wasn't found by this XPath query.
-        /// </para>
-        /// <para>An IllegalArgumentException} is thrown if the parameter
-        /// passed is not a valid XPath expression.
         /// </para>
         /// </summary>
         /// <param name="query">The XPath query</param>
@@ -48,13 +57,7 @@ namespace Yaapii.Xml
         IList<String> Values(String query);
 
         /// <summary>
-        /// 
         /// Retrieve DOM nodes from the XML response.
-        ///
-        /// <para>The <see cref="IList{IXML}"/>
-        /// returned will throw {@link IndexOutOfBoundsException}
-        /// if you try to access a node which wasn't found by this XPath query.
-        /// </para>
         /// <para>An <see cref="ArgumentException"/> is thrown if the parameter
         /// passed is not a valid XPath expression.</para>
         ///
@@ -64,20 +67,16 @@ namespace Yaapii.Xml
         IList<IXML> Nodes(String query);
 
         /// <summary>
-        ///
         /// Register additional namespace prefix for XPath.
-        ///
         /// <para>For example:
-        ///
         /// <code>
-        /// String name = new XMLDocument("...")
+        /// String name = new XMLCursor("...") / new XMLSlice("...")
         ///   .WithNamespace("ns1", "http://example.com")
         ///   .WithNamespace("foo", "http://example.com/foo")
         ///   .Xpath("/ns1:root/foo:name/text()")
         ///   .Item(0);
         /// </code>
         /// </para>
-        ///
         /// <para>A number of standard namespaces are registered by default in
         /// instances of XML. Their
         /// full list is in {@link XMLDocument#XMLDocument(String)}.
