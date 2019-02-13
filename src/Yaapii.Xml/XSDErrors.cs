@@ -27,7 +27,7 @@ namespace Yaapii.Xml
         /// <param name="schema">A XSD schema to validate with</param>
         public XSDErrors(IXML xml, IInput schema) : this(
             xml,
-            new XMLQuery(schema)
+            new XMLCursor(schema)
         )
         { }
 
@@ -37,8 +37,8 @@ namespace Yaapii.Xml
         /// <param name="xml">The XML to be validate</param>
         /// <param name="schema">A XSD schema to validate with</param>
         public XSDErrors(IXML xml, IXML schema) : this(
-            new ScalarOf<XDocument>(() => xml.Node().Document),
-            new ScalarOf<string>(() => schema.Node().ToString())
+            new ScalarOf<XDocument>(() => xml.AsNode().Document),
+            new ScalarOf<string>(() => schema.AsNode().ToString())
         )
         { }
 

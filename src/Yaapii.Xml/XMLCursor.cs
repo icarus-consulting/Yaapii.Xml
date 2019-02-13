@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -18,75 +15,76 @@ using Yaapii.Xambly;
 
 namespace Yaapii.Xml
 {
-    /// <summary> Provides access to a XML Document via XPath queries. Type is <see cref="IXML"/> </summary>
-    public sealed class XMLQuery : IXML
+    /// <summary> 
+    /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+    /// </summary>
+    public sealed class XMLCursor : IXML
     {
         private readonly IScalar<string> xml;
-
-        /// <summary> Is it a leaf node (= not a document node)? </summary>
-        private readonly IScalar<bool> isLeaf;
         private readonly IScalar<XNode> cache;
         private readonly IScalar<IXmlNamespaceResolver> context;
         private readonly Func<XNode, string> stringTransform;
 
-        /// <summary> Initializes Xml from Xambly Directives. </summary>
-        /// <param name="patch"> Xambly patch </param>
-        public XMLQuery(IEnumerable<IDirective> patch) : this(
+        /// <summary> 
+        /// XMLCursor from Xambly Directives. 
+        /// </summary>
+        /// <param name="patch">Xambly patch</param>
+        public XMLCursor(IEnumerable<IDirective> patch) : this(
             new Xambler(patch)
         )
         { }
 
-        /// <summary> Xml from a Xambler. </summary>
+        /// <summary> XMLCursor from a Xambler. </summary>
         /// <param name="xambler"> Xambler to make Xml from </param>
-        public XMLQuery(Xambler xambler) : this(
+        public XMLCursor(Xambler xambler) : this(
             new TextOf(
                 new StickyScalar<string>(() => xambler.Xml())
             )
         )
         { }
 
-        /// <summary> XML from a XNode. </summary>
+        /// <summary> XMLCursor from a XNode. </summary>
         /// <param name="node"> XNode to make XML from </param>
-        public XMLQuery(XNode node) : this(
+        public XMLCursor(XNode node) : this(
             new ScalarOf<XNode>(node),
-            new ScalarOf<IXmlNamespaceResolver>(new XPathContext()),
-            new StickyScalar<bool>(() => node.NodeType != System.Xml.XmlNodeType.Document))
+            new ScalarOf<IXmlNamespaceResolver>(new XPathContext())
+        )
         { }
 
-        /// <summary> XML from a stream. </summary>
+        /// <summary> XMLCursor from a stream. </summary>
         /// <param name="stream"> stream with xml text </param>
-        public XMLQuery(Stream stream) : this(
+        public XMLCursor(Stream stream) : this(
             new TextOf(
                 new InputOf(stream)))
         { }
 
-        /// <summary> XML from a url. </summary>
-        /// <param name="url"> url to ger xml text from </param>
-        public XMLQuery(Url url) : this(
+        /// <summary> XMLCursor from a url. </summary>
+        /// <param name="url"> url to get xml text from </param>
+        public XMLCursor(Url url) : this(
             new InputOf(url))
         { }
 
-        /// <summary> XML from a file. </summary>
+        /// <summary> XMLCursor from a file. </summary>
         /// <param name="file"> file to get xml text from </param>
-        public XMLQuery(Uri file) : this(
+        public XMLCursor(Uri file) : this(
             new InputOf(file))
         { }
 
-        /// <summary> XML from <see cref="IInput"/>. </summary>
+        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
         /// <param name="input"> XNode to make XML from </param>
-        public XMLQuery(IInput input) : this(
+        public XMLCursor(IInput input) : this(
             new TextOf(input))
         { }
 
-        /// <summary> XML from a string. </summary>
+        /// <summary> XMLCursor from a string. </summary>
         /// <param name="text"> xml as string </param>
-        public XMLQuery(String text) : this(
+        public XMLCursor(String text) : this(
             new TextOf(text))
         { }
 
-        /// <summary> XML from <see cref="IText"/> </summary>
+        /// <summary> XMLCursor from <see cref="IText"/> </summary>
         /// <param name="text"> xml as text </param>
-        public XMLQuery(IText text) : this(
+        public XMLCursor(IText text) : this(
             new StickyScalar<XNode>(() =>
             {
                 try
@@ -104,23 +102,21 @@ namespace Yaapii.Xml
             }),
             new ScalarOf<IXmlNamespaceResolver>(
                 new XPathContext()
-            ),
-            new ScalarOf<bool>(false)
+            )
         )
         { }
 
-        /// <summary> XML from node and context, plus info whether it is a document or a node. </summary>
+        /// <summary> XMLCursor from node and context</summary>
         /// <param name="node"> xml as XNode </param>
         /// <param name="context"> context information about namespaces in the xml </param>
         /// <param name="leaf"> is it a document or a node </param>
-        public XMLQuery(XNode node, IXmlNamespaceResolver context, bool leaf) : this(
+        public XMLCursor(XNode node, IXmlNamespaceResolver context) : this(
             new ScalarOf<XNode>(node),
-            new ScalarOf<IXmlNamespaceResolver>(context),
-            new ScalarOf<bool>(leaf)
+            new ScalarOf<IXmlNamespaceResolver>(context)
         )
         { }
 
-        private XMLQuery(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context, IScalar<bool> leaf)
+        internal XMLCursor(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context)
         {
             this.stringTransform = nd =>
             {
@@ -139,7 +135,6 @@ namespace Yaapii.Xml
                 {
                     return this.stringTransform.Invoke(node.Value());
                 });
-            this.isLeaf = new StickyScalar<bool>(leaf);
             this.cache = new StickyScalar<XNode>(node);
             this.context = new StickyScalar<IXmlNamespaceResolver>(context);
         }
@@ -148,12 +143,12 @@ namespace Yaapii.Xml
         /// <returns> xml as string </returns>
         public override sealed string ToString()
         {
-            return this.stringTransform.Invoke(this.Node());
+            return this.stringTransform.Invoke(this.AsNode());
         }
 
         /// <summary> The xml as XNode. </summary>
         /// <returns></returns>
-        public XNode Node()
+        public XNode AsNode()
         {
             var casted = this.cache.Value();
             XNode answer = null;
@@ -165,9 +160,8 @@ namespace Yaapii.Xml
             else
             {
                 var doc = new XDocument();
-                doc.AddFirst(casted); //Correct? Below is the original implementation
+                doc.AddFirst(casted);
                 answer = doc.Root as XNode;
-                //answer = XMLDocument.createImportedNode(casted);
             }
             return answer;
         }
@@ -189,7 +183,7 @@ namespace Yaapii.Xml
                 var el = this.cache.Value().XPathSelectElements(xpath, this.context.Value());
                 var mapped =
                     new Mapped<XElement, IXML>(
-                        elem => new XMLQuery(elem),
+                        elem => new XMLCursor(elem),
                         el
                     );
                 return mapped;
@@ -207,7 +201,7 @@ namespace Yaapii.Xml
                     );
             }
         }
-        
+
         /// <summary>
         /// <para> Registers a new namespace to this xml. </para>
         /// <para> You get back a XML with the new namespace - this one stays like it is. </para>
@@ -218,14 +212,13 @@ namespace Yaapii.Xml
         public IXML WithNamespace(string prefix, object uri)
         {
             return
-                new XMLQuery(
+                new XMLCursor(
                     this.cache.Value(),
                     new XPathContext(
                         this.context.Value().GetNamespacesInScope(XmlNamespaceScope.All),
                         prefix,
                         uri.ToString()
-                    ),
-                    this.isLeaf.Value()
+                    )
                 );
         }
 
@@ -367,10 +360,10 @@ namespace Yaapii.Xml
         /// <returns> true if equal </returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is XMLQuery)) return false;
+            if (!(obj is XMLCursor)) return false;
 
             var left = this.xml.Value().ToString();
-            var right = (obj as XMLQuery).ToString();
+            var right = (obj as XMLCursor).ToString();
 
             return left.Equals(right);
         }

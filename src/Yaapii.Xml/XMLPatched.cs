@@ -86,7 +86,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Patching Xambler </param>
         public XMLPatched(IXML xml, Xambler xambler) : this(
             new StickyScalar<XNode>(
-                () => xml.Node()
+                () => xml.AsNode()
             ),
             xambler
         )
@@ -106,7 +106,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Xambler to modify xml </param>
         public XMLPatched(IScalar<XNode> xml, Xambler xambler) : this(
             new StickyScalar<IXML>(() =>
-                new XMLQuery(xambler.Apply(xml.Value()))
+                new XMLCursor(xambler.Apply(xml.Value()))
             )
         )
         { }
@@ -116,9 +116,9 @@ namespace Yaapii.Xml
             xml = modifiedXml;
         }
 
-        public XNode Node()
+        public XNode AsNode()
         {
-            return xml.Value().Node();
+            return xml.Value().AsNode();
         }
 
         public IList<IXML> Nodes(string query)

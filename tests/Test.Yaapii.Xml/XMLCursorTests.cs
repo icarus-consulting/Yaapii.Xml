@@ -6,13 +6,13 @@ using System.Xml.Linq;
 
 namespace Yaapii.Xml.Test
 {
-    public sealed class XMLQueryTests
+    public sealed class XMLCursorTests
     {
         [Fact]
         public void FindsDocumentNodes()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     new Atoms.IO.InputOf(
                         "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                     )
@@ -30,7 +30,7 @@ namespace Yaapii.Xml.Test
         {
             try
             {
-                var n = new XMLQuery("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Nodes("//x/[text()")[0];
+                var n = new XMLCursor("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Nodes("//x/[text()")[0];
                 Assert.True(false, "expected an Exception, should not get here");
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace Yaapii.Xml.Test
         {
             try
             {
-                var v = new XMLQuery("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Values("//[x")[0];
+                var v = new XMLCursor("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Values("//[x")[0];
                 Assert.True(false, "expected an Exception, should not get here");
             }
             catch (Exception ex)
@@ -62,7 +62,7 @@ namespace Yaapii.Xml.Test
         {
             try
             {
-                var v = new XMLQuery("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Values("//a")[0];
+                var v = new XMLCursor("<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>").Values("//a")[0];
                 Assert.True(false, "expected an Exception, should not get here");
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Yaapii.Xml.Test
         public void FindsDocumentValues()
         {
             IXML doc =
-               new XMLQuery(
+               new XMLCursor(
                    new Atoms.IO.InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
@@ -94,7 +94,7 @@ namespace Yaapii.Xml.Test
         public void ValueRejectsWrongSelection()
         {
             IXML doc =
-               new XMLQuery(
+               new XMLCursor(
                    new Atoms.IO.InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
@@ -109,7 +109,7 @@ namespace Yaapii.Xml.Test
         public void FindsNodesWithBuiltinNamespace()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     "<html xmlns='http://www.w3.org/1999/xhtml'><div>\u0443\u0440\u0430!</div></html>"
                 );
 
@@ -129,7 +129,7 @@ namespace Yaapii.Xml.Test
         public void FindsNodesWithCustomNamespace()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     "<a xmlns='urn:foo'><b>\u0433!</b></a>"
                 );
 
@@ -151,7 +151,7 @@ namespace Yaapii.Xml.Test
         public void FindsDocumentNodesWithXpath()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     new Yaapii.Atoms.IO.InputOf(
                         "<root><a><x>1</x></a><a><x>2</x></a></root>"
                     )
@@ -171,26 +171,26 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void ConvertsItselfToXml()
         {
-            IXML doc = new XMLQuery("<hello><a/></hello>");
+            IXML doc = new XMLCursor("<hello><a/></hello>");
 
             Assert.Single(
-                new XMLQuery(doc.ToString()).Nodes("/hello/a")
+                new XMLCursor(doc.ToString()).Nodes("/hello/a")
             );
         }
 
         [Fact]
         public void RetrievesDomNode()
         {
-            IXML doc = new XMLQuery("<root><simple>hello</simple></root>");
+            IXML doc = new XMLCursor("<root><simple>hello</simple></root>");
 
             Assert.Equal(
                 "<simple>hello</simple>",
-                doc.Nodes("/root/simple")[0].Node().ToString()
+                doc.Nodes("/root/simple")[0].AsNode().ToString()
             );
 
             Assert.Equal<XmlNodeType>(
                 XmlNodeType.Element,
-                doc.Nodes("//simple")[0].Node().NodeType
+                doc.Nodes("//simple")[0].AsNode().NodeType
             );
         }
 
@@ -198,7 +198,7 @@ namespace Yaapii.Xml.Test
         public void RejectsXPathWithNoResult()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new XMLQuery("<root/>").Values("/absent-node/text()")[0]
+                new XMLCursor("<root/>").Values("/absent-node/text()")[0]
             );
 
             //TODO: Check for Exception containing detailed informations. 
@@ -210,7 +210,7 @@ namespace Yaapii.Xml.Test
         {
             try
             {
-                var v = new XMLQuery("<root-99/>").Values("/*/hello()")[0];
+                var v = new XMLCursor("<root-99/>").Values("/*/hello()")[0];
                 Assert.True(false, "expected an Exception, should not get here");
             }
             catch (Exception ex)
@@ -226,7 +226,7 @@ namespace Yaapii.Xml.Test
         {
             Assert.Contains(
                 "<?x test?>",
-                new XMLQuery("<?xml version='1.0'?><?x test?><a/>").ToString()
+                new XMLCursor("<?xml version='1.0'?><?x test?><a/>").ToString()
             );
         }
 
@@ -234,7 +234,7 @@ namespace Yaapii.Xml.Test
         public void PreservesDomStructureWhenXpath()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     "<root><item1/><item2/><item3/></root>"
                 );
 
@@ -247,7 +247,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void PrintsWithAndWithoutXmlHeader()
         {
-            IXML doc = new XMLQuery("<hey/>");
+            IXML doc = new XMLCursor("<hey/>");
             Assert.Contains(
                 "<?xml",
                 doc.ToString());
@@ -260,7 +260,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void PerformsXpathCalculations()
         {
-            IXML xml = new XMLQuery("<x><a/><a/><a/></x>");
+            IXML xml = new XMLCursor("<x><a/><a/><a/></x>");
 
             Assert.Single(
                 xml.Values("count(//x/a)")
@@ -276,29 +276,29 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void BuildsDomNode()
         {
-            IXML doc = new XMLQuery("<?xml version='1.0'?><f/>");
+            IXML doc = new XMLCursor("<?xml version='1.0'?><f/>");
 
             Assert.True(
-                doc.Node().NodeType == XmlNodeType.Document
+                doc.AsNode().NodeType == XmlNodeType.Document
             );
             Assert.True(
-                doc.Nodes("/f")[0].Node().NodeType == XmlNodeType.Element
+                doc.Nodes("/f")[0].AsNode().NodeType == XmlNodeType.Element
             );
         }
 
         [Fact]
         public void ComparesToAnotherDocument()
         {
-            var left = new XMLQuery("<hi><dude>  </dude></hi>");
-            var right = new XMLQuery("<hi><dude>  </dude></hi>");
+            var left = new XMLCursor("<hi><dude>  </dude></hi>");
+            var right = new XMLCursor("<hi><dude>  </dude></hi>");
 
-            Assert.Equal<XMLQuery>(
+            Assert.Equal<XMLCursor>(
                 left, right
             );
 
-            Assert.NotEqual<XMLQuery>(
-                new XMLQuery("<hi><man></man></hi>"),
-                new XMLQuery("<hi><man>  </man></hi>")
+            Assert.NotEqual<XMLCursor>(
+                new XMLCursor("<hi><man></man></hi>"),
+                new XMLCursor("<hi><man>  </man></hi>")
             );
         }
 
@@ -308,15 +308,15 @@ namespace Yaapii.Xml.Test
             String xml = "<a xmlns='http://www.w3.org/1999/xhtml'><b/></a>";
             Assert.True(
                 new LengthOf(
-                    new XMLQuery(xml).Nodes("/xhtml:a/xhtml:b")
+                    new XMLCursor(xml).Nodes("/xhtml:a/xhtml:b")
                 ).Value() == 1);
         }
 
         [Fact]
         public void PreservesImmutability()
         {
-            IXML xml = new XMLQuery("<r1><a/></r1>");
-            XNode node = xml.Nodes("/r1/a")[0].Node();
+            IXML xml = new XMLCursor("<r1><a/></r1>");
+            XNode node = xml.Nodes("/r1/a")[0].AsNode();
             node.Remove();
 
             Assert.Single(
@@ -327,7 +327,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void PreservesNodeWhenAccessingValue()
         {
-            IXML xml = new XMLQuery("<r1><a><b>1</b></a><a><b>2</b></a></r1>");
+            IXML xml = new XMLCursor("<r1><a><b>1</b></a><a><b>2</b></a></r1>");
 
             foreach(var node in xml.Nodes("/r1/a/b"))
             {
@@ -339,7 +339,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void AppliesXpathToClonedNode()
         {
-            IXML xml = new XMLQuery("<t6><z9 a='433'/></t6>");
+            IXML xml = new XMLCursor("<t6><z9 a='433'/></t6>");
             IXML root = xml.Nodes("/t6")[0];
 
             Assert.Equal(
@@ -351,7 +351,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void ContainsOnlyQueriedNodes()
         {
-            IXML xml = new XMLQuery("<t6><z9 a='433'><item>a</item><item>b</item></z9><z9 a='432'><item>c</item></z9></t6>");
+            IXML xml = new XMLCursor("<t6><z9 a='433'><item>a</item><item>b</item></z9><z9 a='432'><item>c</item></z9></t6>");
             IXML root = xml.Nodes("/t6/z9[@a='433']")[0];
 
             Assert.Empty(root.Values("/z9[@a='432']"));
@@ -362,7 +362,7 @@ namespace Yaapii.Xml.Test
         public void NodesCanBeInterlaced()
         {
             IXML doc =
-                new XMLQuery(
+                new XMLCursor(
                     "<root><item1><subitem1/></item1><item2/><item3/></root>");
             
             Assert.Equal(

@@ -46,7 +46,7 @@ namespace Yaapii.Xml.Test
         {
             var modifiedXml =
                 new XMLPatched(
-                    new XMLQuery("<root><node><leaf name='test' /></node></root>"),
+                    new XMLCursor("<root><node><leaf name='test' /></node></root>"),
                     new Directives()
                         .Xpath("//root/node/leaf")
                         .Attr("id", "123")
@@ -62,9 +62,9 @@ namespace Yaapii.Xml.Test
         public void WorksWithXNode()
         {
             var xml =
-                new XMLQuery(
+                new XMLCursor(
                     "<root><node><leaf name='test' /></node></root>"
-                ).Node();
+                ).AsNode();
             var modifiedXml =
                 new XMLPatched(
                     xml,

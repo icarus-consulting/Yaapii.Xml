@@ -63,14 +63,14 @@ namespace Yaapii.Xml
                 using (XmlWriter writer = XmlWriter.Create(output, settings))
                 {
                     this.Xslt().Transform(
-                        xml.Node().CreateReader(),
+                        xml.AsNode().CreateReader(),
                         Params(),
                         writer
                     );
                 }
             });
 
-            return new XMLQuery(output.ToString());
+            return new XMLCursor(output.ToString());
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Yaapii.Xml
                 using (var writer = new StringWriter(sb))
                 {
                     this.Xslt().Transform(
-                        xml.Node().CreateReader(),
+                        xml.AsNode().CreateReader(),
                         Params(),
                         writer
                     );
@@ -122,7 +122,7 @@ namespace Yaapii.Xml
         /// <returns></returns>
         public override string ToString()
         {
-            return new XMLQuery(this.xsl).ToString();
+            return new XMLCursor(this.xsl).ToString();
         }
 
         /// <summary>
