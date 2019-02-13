@@ -96,8 +96,6 @@ namespace Yaapii.Xml
         /// Retrieve DOM node, represented by an XNode
         /// </summary>
         /// <returns>DOM node</returns>
-        XNode Node();
-
-        //IXML Merged(NamespaceContext context);
+        XNode AsNode();
     }
 }
