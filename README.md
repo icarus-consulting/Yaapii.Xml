@@ -15,9 +15,12 @@ var xml =
         new Atoms.IO.InputOf("<root><a><x type='value'>1</x></a><a><x>2</x></a></root>")
     ).AsString(); //you can get the xml string from wherever you want - no need to use atoms, if you don't want to
 
-new XMLCursor(doc).Nodes("//a"); //Will give you a list of new XMLCursor objects. The original document is preserved!
+	//Will give you a list of new XMLCursor objects.
+	//The original document is preserved!
+	new XMLCursor(doc).Nodes("//a"); 
 
-new XMLCursor(doc).Values("//x/@type"); //will give you a list of values of the type attributes at <x> elements
+	//will give you a list of values of the type attributes at <x> elements
+	new XMLCursor(doc).Values("//x/@type"); 
 ```
 
 ### *Important*
