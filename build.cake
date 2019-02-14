@@ -111,10 +111,7 @@ Task("Generate-Coverage")
 {
 	try
 	{
-		var projectsToCover = new [] {
-                ypXmlTests
-		};
-
+		var projectsToCover = new [] { ypXmlTests };
         var dotNetCoreTestSettings =
             new DotNetCoreTestSettings
             {
@@ -271,7 +268,7 @@ Task("Default")
   .IsDependentOn("Test Yaapii")
   .IsDependentOn("Generate-Coverage")
   .IsDependentOn("Generate-Coverage-Report")
-  //.IsDependentOn("Upload-Coverage") codecov cannot be used, we have a private repo.
+  .IsDependentOn("Upload-Coverage")
   .IsDependentOn("Pack")
   .IsDependentOn("Release");
 

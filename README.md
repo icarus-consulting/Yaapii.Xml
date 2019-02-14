@@ -75,6 +75,12 @@ new XMLCursor("<root><sub><inner>Hello world</inner></sub>")
 
 ```
 
+### Get current cursor node
+```csharp
+// returns the current xpath slice as XNode.
+new XMLCursor("<root><sub>great xml here</sub></root>").Nodes("/root/sub")[0].AsNode(); //<sub>great xml here</sub>
+```
+
 ### Helpful Wraps
 There are a number of helpful wraps which return a specific type:
 
@@ -83,12 +89,6 @@ There are a number of helpful wraps which return a specific type:
 - XMLNumber
 - XMLText
 - XMLTexts
-
-### Get current cursor node
-```csharp
-// returns the current xpath slice as XNode.
-new XMLCursor("<root><sub>great xml here</sub></root>").Nodes("/root/sub")[0].AsNode(); //<sub>great xml here</sub>
-```
 
 ## Apply XSL transformations to an XML document:
 
