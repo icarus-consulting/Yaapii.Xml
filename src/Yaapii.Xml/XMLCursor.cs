@@ -75,9 +75,17 @@ namespace Yaapii.Xml
 
         /// <summary> XMLCursor from a stream. </summary>
         /// <param name="stream"> stream with xml text </param>
-        public XMLCursor(Stream stream) : this(
+        public XMLCursor(Stream stream) : this(stream, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from a stream. </summary>
+        /// <param name="stream"> stream with xml text </param>
+        public XMLCursor(Stream stream, Encoding encoding) : this(
             new TextOf(
-                new InputOf(stream)))
+                new InputOf(stream), 
+                encoding
+            )
+        )
         { }
 
         /// <summary> XMLCursor from a url. </summary>
@@ -86,16 +94,36 @@ namespace Yaapii.Xml
             new InputOf(url))
         { }
 
+        /// <summary> XMLCursor from a url. </summary>
+        /// <param name="url"> url to get xml text from </param>
+        public XMLCursor(Url url, Encoding encoding) : this(
+            new InputOf(url), encoding
+        )
+        { }
+
         /// <summary> XMLCursor from a file. </summary>
         /// <param name="file"> file to get xml text from </param>
-        public XMLCursor(Uri file) : this(
-            new InputOf(file))
+        public XMLCursor(Uri file) : this(file, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from a file. </summary>
+        /// <param name="file"> file to get xml text from </param>
+        public XMLCursor(Uri file, Encoding encoding) : this(
+            new InputOf(file), 
+            encoding
+        )
         { }
 
         /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
         /// <param name="input"> XNode to make XML from </param>
-        public XMLCursor(IInput input) : this(
-            new TextOf(input))
+        public XMLCursor(IInput input) : this(input, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
+        /// <param name="input"> XNode to make XML from </param>
+        public XMLCursor(IInput input, Encoding encoding) : this(
+            new TextOf(input, encoding)
+        )
         { }
 
         /// <summary> XMLCursor from a string. </summary>
