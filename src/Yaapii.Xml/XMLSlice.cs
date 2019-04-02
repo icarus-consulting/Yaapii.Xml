@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Yaapii.Atoms;
@@ -68,27 +69,52 @@ namespace Yaapii.Xml
 
         /// <summary> XMLCursor from a stream. </summary>
         /// <param name="stream"> stream with xml text </param>
-        public XMLSlice(Stream stream) : this(
+        public XMLSlice(Stream stream) : this(stream, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from a stream. </summary>
+        /// <param name="stream"> stream with xml text </param>
+        public XMLSlice(Stream stream, Encoding encoding) : this(
             new TextOf(
-                new InputOf(stream)))
+                new InputOf(stream),
+                encoding
+            )
+        )
         { }
 
         /// <summary> XMLCursor from a url. </summary>
         /// <param name="url"> url to get xml text from </param>
-        public XMLSlice(Url url) : this(
-            new InputOf(url))
+        public XMLSlice(Url url) : this(url, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from a url. </summary>
+        /// <param name="url"> url to get xml text from </param>
+        public XMLSlice(Url url, Encoding encoding) : this(
+            new InputOf(url), encoding)
         { }
 
         /// <summary> XMLCursor from a file. </summary>
         /// <param name="file"> file to get xml text from </param>
-        public XMLSlice(Uri file) : this(
-            new InputOf(file))
+        public XMLSlice(Uri file) : this(file, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from a file. </summary>
+        /// <param name="file"> file to get xml text from </param>
+        public XMLSlice(Uri file, Encoding encoding) : this(
+            new InputOf(file),
+            encoding
+        )
         { }
 
         /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
         /// <param name="input"> XNode to make XML from </param>
-        public XMLSlice(IInput input) : this(
-            new TextOf(input))
+        public XMLSlice(IInput input) : this(input, Encoding.Default)
+        { }
+
+        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
+        /// <param name="input"> XNode to make XML from </param>
+        public XMLSlice(IInput input, Encoding encoding) : this(
+            new TextOf(input, encoding))
         { }
 
         /// <summary> XMLCursor from a string. </summary>

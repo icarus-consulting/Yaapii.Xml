@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.IO;
+using System.Text;
 using Xunit;
 
 namespace Yaapii.Xml.Test
@@ -34,6 +37,72 @@ namespace Yaapii.Xml.Test
                 node.ToString(),
                 node.Document.ToString()
             );
+        }
+
+        [Theory]
+        [InlineData("UTF-7")]
+        [InlineData("UTF-8")]
+        [InlineData("UTF-16")]
+        [InlineData("UTF-32")]
+        public void InputCtorAppliesEncoding(string name)
+        {
+            var encoding = Encoding.GetEncoding(name);
+            var inBytes = encoding.GetBytes("<root>Can I or can't I dö prüper äncöding</root>");
+
+            Assert.Equal(
+                "Can I or can't I dö prüper äncöding",
+                new XMLSlice(
+                    new Yaapii.Atoms.IO.InputOf(inBytes),
+                    encoding
+                ).Values("/root/text()")[0]
+            );
+        }
+
+        [Theory]
+        [InlineData("UTF-7")]
+        [InlineData("UTF-8")]
+        [InlineData("UTF-16")]
+        [InlineData("UTF-32")]
+        public void StreamCtorAppliesEncoding(string name)
+        {
+            var encoding = Encoding.GetEncoding(name);
+            var inBytes = encoding.GetBytes("<root>Can I or can't I dö prüper äncöding</root>");
+
+            Assert.Equal(
+                "Can I or can't I dö prüper äncöding",
+                new XMLSlice(
+                    new Yaapii.Atoms.IO.InputOf(inBytes).Stream(),
+                    encoding
+                ).Values("/root/text()")[0]
+            );
+        }
+
+        [Theory]
+        [InlineData("UTF-7")]
+        [InlineData("UTF-8")]
+        [InlineData("UTF-16")]
+        [InlineData("UTF-32")]
+        public void FileCtorAppliesEncoding(string name)
+        {
+            using (var tmp = new Yaapii.Atoms.IO.TempDirectory())
+            {
+                var encoding = Encoding.GetEncoding(name);
+                var inBytes = encoding.GetBytes("<root>Can I or can't I dö prüper äncöding</root>");
+                var path = Path.Combine(tmp.Value().FullName, "encoded.txt");
+
+                File.WriteAllBytes(
+                    path,
+                    inBytes
+                );
+
+                Assert.Equal(
+                    "Can I or can't I dö prüper äncöding",
+                    new XMLSlice(
+                        new Uri("file:///" + path),
+                        encoding
+                    ).Values("/root/text()")[0]
+                );
+            }
         }
     }
 }
