@@ -22,8 +22,6 @@
 
 using System;
 using Yaapii.Atoms;
-using Yaapii.Atoms.Text;
-using Yaapii.Xml.Error;
 
 namespace Yaapii.Xml
 {
@@ -39,19 +37,18 @@ namespace Yaapii.Xml
         /// <summary>
         /// A string in a document, retrieved by xpath.
         /// </summary>
-        public XMLString(IXML xml, string xpath) : this(xml, xpath, 
-            () =>
-            {
-                throw
-                    new ArgumentException(
-                        new FormattedText(
-                            $"Cannot retrieve single value with XPath '{0}', because it had no results in document{Environment.NewLine} {1}",
-                            xpath,
-                            xml.AsNode().ToString()
-                        ).AsString()
+        public XMLString(IXML xml, string xpath) :
+            this
+            (
+                xml,
+                xpath,
+                () =>
+                {
+                    throw new ArgumentException(
+                        $"Cannot retrieve single value with XPath '{xpath}', because it had no results in document{Environment.NewLine}'{xml.AsNode().ToString()}'."
                     );
-            }
-        )
+                }
+            )
         { }
 
         /// <summary>
@@ -81,12 +78,11 @@ namespace Yaapii.Xml
             {
                 result = this.fallback();
             }
-            else if(matches.Count > 1)
+            else if (matches.Count > 1)
             {
-                throw 
-                    new ArgumentException(
-                        $"Cannot extract single value with xpath {this.xpath} because it resulted in multiple values in document {xml.ToString()}"
-                    );
+                throw new ArgumentException(
+                    $"Cannot retrieve single value with XPath '{this.xpath}' because it resulted in multiple values in document{Environment.NewLine}'{this.xml.AsNode().ToString()}'."
+                );
             }
             else
             {

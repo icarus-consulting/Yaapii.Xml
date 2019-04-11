@@ -22,6 +22,7 @@
 
 using System;
 using Xunit;
+using Yaapii.Atoms.IO;
 using Yaapii.Xambly;
 
 namespace Yaapii.Xml.Test
@@ -77,14 +78,37 @@ namespace Yaapii.Xml.Test
                         .Set("ugly_text")
                 );
 
-                Assert.Equal(
-                    "right text",
-                    new XMLString(
-                        doc,
-                        "/wrong/text()",
-                        "right text"
-                    ).Value()
+            Assert.Equal(
+                "right text",
+                new XMLString(
+                    doc,
+                    "/wrong/text()",
+                    "right text"
+                ).Value()
+            );
+        }
+
+        [Fact]
+        public void ReturnsXmlInExceptionMessage()
+        {
+            var xml =
+                new XMLCursor(
+                    new ResourceOf(
+                        "Resources/simple.xml",
+                        this.GetType()
+                    ).Stream()
                 );
+            try
+            {
+                new XMLString(xml, "root/complex").Value();
+            }
+            catch (Exception ex)
+            {
+                Assert.Contains("" +
+                    "Cannot retrieve single value with XPath 'root/complex', because it had no results in document\r\n'\r\n<root>\r\n  <simple>hello</simple>\r\n</root>\r\n'.",
+                    ex.Message
+                );
+            }
         }
     }
 }
