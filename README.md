@@ -10,7 +10,7 @@ Apply XPath queries to an XML document:
 
 ## XMLCursor
 ```csharp
-var xml =
+var doc =
     new TextOf(
         new Atoms.IO.InputOf("<root><a><x type='value'>1</x></a><a><x>2</x></a></root>")
     ).AsString(); //you can get the xml string from wherever you want - no need to use atoms, if you don't want to
