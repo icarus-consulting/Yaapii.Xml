@@ -34,7 +34,7 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XMLPatched : IXML
     {
-        private readonly StickyScalar<IXML> xml;
+        private readonly Sticky<IXML> xml;
 
         /// <summary> Patched XML.</summary>
         /// <param name="xml"> XML to patch </param>
@@ -94,7 +94,7 @@ namespace Yaapii.Xml
         /// <param name="xml"> XML to patch </param>
         /// <param name="xambler"> Patching Xambler </param>
         public XMLPatched(IScalar<string> xml, Xambler xambler) : this(
-            new StickyScalar<XNode>(() =>
+            new Sticky<XNode>(() =>
                 {
                     return XDocument.Parse(xml.Value());
                 }
@@ -107,7 +107,7 @@ namespace Yaapii.Xml
         /// <param name="xml"> XML to patch </param>
         /// <param name="xambler"> Patching Xambler </param>
         public XMLPatched(IXML xml, Xambler xambler) : this(
-            new StickyScalar<XNode>(
+            new Sticky<XNode>(
                 () => xml.AsNode()
             ),
             xambler
@@ -127,13 +127,13 @@ namespace Yaapii.Xml
         /// <param name="xml"> XML to patch </param>
         /// <param name="xambler"> Xambler to modify xml </param>
         public XMLPatched(IScalar<XNode> xml, Xambler xambler) : this(
-            new StickyScalar<IXML>(() =>
+            new Sticky<IXML>(() =>
                 new XMLCursor(xambler.Apply(xml.Value()))
             )
         )
         { }
 
-        private XMLPatched(StickyScalar<IXML> modifiedXml)
+        private XMLPatched(Sticky<IXML> modifiedXml)
         {
             xml = modifiedXml;
         }

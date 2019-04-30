@@ -96,7 +96,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new UnsupportedOperationException(
-                        new FormattedText(
+                        new Formatted(
                             "Cannot resolve stylesheet '{0}' XSL-sources currently pointing to assembly resources - use XSLDocument.With(XMLResolver) to use another.",
                             Path.GetFileName(absoluteUri.AbsoluteUri)
                         ).AsString()

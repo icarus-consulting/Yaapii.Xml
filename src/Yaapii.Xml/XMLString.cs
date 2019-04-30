@@ -44,7 +44,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             $"Cannot retrieve single value with XPath '{0}', because it had no results in document{Environment.NewLine} {1}",
                             xpath,
                             xml.AsNode().ToString()

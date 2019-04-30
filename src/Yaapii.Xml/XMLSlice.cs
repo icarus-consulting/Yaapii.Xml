@@ -54,7 +54,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Xambler to make Xml from </param>
         public XMLSlice(Xambler xambler) : this(
             new TextOf(
-                new StickyScalar<string>(() => xambler.Xml())
+                new Sticky<string>(() => xambler.Xml())
             )
         )
         { }
@@ -126,7 +126,7 @@ namespace Yaapii.Xml
         /// <summary> XMLCursor from <see cref="IText"/> </summary>
         /// <param name="text"> xml as text </param>
         public XMLSlice(IText text) : this(
-            new StickyScalar<XNode>(() =>
+            new Sticky<XNode>(() =>
             {
                 try
                 {
@@ -136,7 +136,7 @@ namespace Yaapii.Xml
                 {
                     throw
                         new XmlException(
-                            new FormattedText("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
+                            new Formatted("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
                             ex
                         );
                 }

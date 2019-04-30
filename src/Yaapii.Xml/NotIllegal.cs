@@ -62,7 +62,7 @@ namespace Yaapii.Xml
             if (c >= left && c <= right)
             {
                 throw new XmlException(
-                    new FormattedText(
+                    new Formatted(
                         "Character {0} is in the restricted XML range {1} - {2}, see http://www.w3.org/TR/2004/REC-xml11-20040204/#charsets",
                         c, left, right
                         ).AsString());

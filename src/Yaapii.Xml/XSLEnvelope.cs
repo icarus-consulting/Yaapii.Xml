@@ -181,7 +181,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             "invalid xslt: {0}\r\nContent:\r\n {1}",
                             xex.Message + (xex.InnerException != null ? ", " + xex.InnerException.Message : ""),
                             this.xsl.AsString()
