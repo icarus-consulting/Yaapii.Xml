@@ -60,7 +60,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Xambler to make Xml from </param>
         public XMLCursor(Xambler xambler) : this(
             new TextOf(
-                new StickyScalar<string>(() => xambler.Xml())
+                new Sticky<string>(() => xambler.Xml())
             )
         )
         { }
@@ -135,7 +135,7 @@ namespace Yaapii.Xml
         /// <summary> XMLCursor from <see cref="IText"/> </summary>
         /// <param name="text"> xml as text </param>
         public XMLCursor(IText text) : this(
-            new StickyScalar<XNode>(() =>
+            new Sticky<XNode>(() =>
             {
                 try
                 {
@@ -145,7 +145,7 @@ namespace Yaapii.Xml
                 {
                     throw
                         new XmlException(
-                            new FormattedText("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
+                            new Formatted("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
                             ex
                         );
                 }
@@ -180,13 +180,13 @@ namespace Yaapii.Xml
                 }
                 return sb.ToString();
             };
-            this.xml = new StickyScalar<string>(
+            this.xml = new Sticky<string>(
                 () =>
                 {
                     return this.stringTransform.Invoke(node.Value());
                 });
-            this.cache = new StickyScalar<XNode>(node);
-            this.context = new StickyScalar<IXmlNamespaceResolver>(context);
+            this.cache = new Sticky<XNode>(node);
+            this.context = new Sticky<IXmlNamespaceResolver>(context);
         }
 
         /// <summary> The xml formatted as string. </summary>
@@ -242,7 +242,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             "Invalid XPath expression '{0}': {1}",
                             xpath,
                             ex.Message
@@ -336,7 +336,7 @@ namespace Yaapii.Xml
                 {
                     throw
                         new Exception(
-                            new FormattedText("Unexpected xpath result type '{0}'", eval.GetType().Name).AsString());
+                            new Formatted("Unexpected xpath result type '{0}'", eval.GetType().Name).AsString());
                 }
                 items = result;
             }
@@ -344,7 +344,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             "Only text() nodes, CData sections or attributes are retrievable with xpath() '{0}': {1}",
                             xpath,
                             aex.Message).AsString(),
@@ -355,7 +355,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             "Invalid XPath expression '{0}': {1}",
                             xpath,
                             ex.Message
@@ -395,7 +395,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new FormattedText(
+                        new Formatted(
                             "Unexpected node type {0}",
                             xObject.GetType().Name
                         ).AsString()

@@ -39,7 +39,7 @@ namespace Yaapii.Xml
         {
             throw
                 new UnsupportedOperationException(
-                    new FormattedText(
+                    new Formatted(
                         "Cannot resolve stylesheet '{0}' No XSL sources configured - use XSLDocument.With(XMLResolver) to add them.",
                         Path.GetFileName(absoluteUri.AbsoluteUri)
                     ).AsString()
@@ -50,7 +50,7 @@ namespace Yaapii.Xml
         {
             throw
                 new UnsupportedOperationException(
-                    new FormattedText(
+                    new Formatted(
                         "Cannot resolve stylesheet '{0}' No XSL sources configured - use XSLDocument.With(XMLResolver) to add them.",
                         Path.GetFileName(relativeUri)
                     ).AsString()
