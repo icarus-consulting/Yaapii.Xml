@@ -60,14 +60,14 @@ var xml =
 Point of view: A XMLSlice represents a sealed XML document. When you call ```xmlSlice.Nodes(xpath)```, this returns new XMLSlices. They are always a new document.
 Therefore, the following xpath has results:
 ```csharp
-new XMLCursor("<root><sub><inner>Hello world</inner></sub>")
+new XMLSlice("<root><sub><inner>Hello world</inner></sub>")
     .Nodes("/root/sub")[0]
     .Values("/sub/inner/text()");
 ```
 
 While this one has no results:
 ```csharp
-new XMLCursor("<root><sub><inner>Hello world</inner></sub>")
+new XMLSlice("<root><sub><inner>Hello world</inner></sub>")
     .Nodes("/root/sub")[0]
     .Values("inner/text()"); 
     //because .Nodes(...) returns slices of the original document,
