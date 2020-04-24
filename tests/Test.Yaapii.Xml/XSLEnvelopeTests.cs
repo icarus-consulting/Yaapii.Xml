@@ -23,11 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 using Yaapii.Atoms.IO;
 using Yaapii.Atoms.Text;
-using Yaapii.Xml;
 
 namespace Yaapii.Xml.Test
 {
@@ -52,7 +50,7 @@ namespace Yaapii.Xml.Test
                 new SourcesEmpty(),
                 new Dictionary<String, Object>()
             );
-           
+
             Assert.Contains(
                 "<xsl:with-param name=\"value\" select=\"5.67\"",
                 xsl.ToString()

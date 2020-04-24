@@ -27,15 +27,14 @@ namespace Yaapii.Xml
     /// <summary>
     /// Strings in a document, retrieved by xpath.
     /// </summary>
-    public sealed class XMLStrings : EnumerableEnvelope<string>
+    public sealed class XMLStrings : ManyEnvelope<string>
     {
         /// <summary>
         /// Strings in a document, retrieved by xpath.
         /// </summary>
-        public XMLStrings(string xpath, IXML xml) : base(() =>
-            {
-                return xml.Values(xpath);
-            }
+        public XMLStrings(string xpath, IXML xml) : base(
+            () => xml.Values(xpath),
+            false
         )
         { }
     }

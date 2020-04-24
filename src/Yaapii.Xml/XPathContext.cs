@@ -106,7 +106,7 @@ namespace Yaapii.Xml
         /// <param name="nsuri">new namespace uri</param>
         public XPathContext(IDictionary<string, string> old, string prefix, string nsuri) : this(
             new MapOf<string, string>(
-                new Joined<KeyValuePair<string, string>>(
+                new Atoms.Enumerable.Joined<KeyValuePair<string, string>>(
                     old,
                     new KeyValuePair<string, string>(prefix, nsuri)
                     )
@@ -171,7 +171,7 @@ namespace Yaapii.Xml
 
             foreach (var entry in GetNamespacesInScope(XmlNamespaceScope.All))
             {
-                if(entry.Value.Equals(namespaceName))
+                if (entry.Value.Equals(namespaceName))
                 {
                     prefix = entry.Key;
                     break;
@@ -233,10 +233,10 @@ namespace Yaapii.Xml
         /// <returns></returns>
         private IEnumerable<string> FromMap(string prefix)
         {
-            var ns = new EnumerableOf<string>();
+            var ns = new ManyOf<string>();
             if (this.map.ContainsKey(prefix))
             {
-                ns = new EnumerableOf<string>(this.map[prefix]);
+                ns = new ManyOf<string>(this.map[prefix]);
             }
             return ns;
         }
@@ -248,13 +248,13 @@ namespace Yaapii.Xml
         /// <returns>list with one or no result</returns>
         private IEnumerable<string> FromContexts(string prefix)
         {
-            IEnumerable<string> ns = new EnumerableOf<string>();
+            IEnumerable<string> ns = new ManyOf<string>();
             foreach (IScalar<IXmlNamespaceResolver> ctx in this.contexts)
             {
                 string uri = ctx.Value().LookupNamespace(prefix);
                 if (uri != null)
                 {
-                    ns = new EnumerableOf<string>(uri);
+                    ns = new ManyOf<string>(uri);
                 }
             }
             return ns;
@@ -271,15 +271,15 @@ namespace Yaapii.Xml
 
             if (prefix.Equals(XML_NS_PREFIX)) //Defined by the XML specification to be "xml"
             {
-                ns = new EnumerableOf<string>(XML_NS_URI); //Defined by the XML specification
+                ns = new ManyOf<string>(XML_NS_URI); //Defined by the XML specification
             }
             else if (prefix.Equals(XMLNS_ATTRIBUTE)) //Defined by the XML specification to be "xmlns"
             {
-                ns = new EnumerableOf<string>(XMLNS_ATTRIBUTE_NS_URI); //Defined by the XML specification
+                ns = new ManyOf<string>(XMLNS_ATTRIBUTE_NS_URI); //Defined by the XML specification
             }
             else
             {
-                ns = new EnumerableOf<string>(NULL_NS_URI);
+                ns = new ManyOf<string>(NULL_NS_URI);
             }
             return ns;
         }

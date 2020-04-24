@@ -21,11 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Yaapii.Atoms.Text;
-using Yaapii.Xml;
 
 namespace Yaapii.Xml.Test
 {

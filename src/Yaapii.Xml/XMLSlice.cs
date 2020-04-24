@@ -54,7 +54,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Xambler to make Xml from </param>
         public XMLSlice(Xambler xambler) : this(
             new TextOf(
-                new Sticky<string>(() => xambler.Xml())
+                new ScalarOf<string>(() => xambler.Xml())
             )
         )
         { }
@@ -126,7 +126,7 @@ namespace Yaapii.Xml
         /// <summary> XMLCursor from <see cref="IText"/> </summary>
         /// <param name="text"> xml as text </param>
         public XMLSlice(IText text) : this(
-            new Sticky<XNode>(() =>
+            new ScalarOf<XNode>(() =>
             {
                 try
                 {

@@ -20,10 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using Yaapii.Atoms;
-using Yaapii.Atoms.Text;
-using Yaapii.Xml.Error;
 
 namespace Yaapii.Xml
 {
