@@ -49,7 +49,7 @@
 
   <ItemGroup>
     <PackageReference Include="Yaapii.Atoms" Version="2.0.1" />
-    <PackageReference Include="Yaapii.Xambly" Version="0.7.3" />
+    <PackageReference Include="Yaapii.Xambly" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
