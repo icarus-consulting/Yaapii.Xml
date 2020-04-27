@@ -2,7 +2,6 @@
 #tool nuget:?package=OpenCover
 #tool nuget:?package=xunit.runner.console
 #tool nuget:?package=Codecov
-#tool nuget:?package=ReportGenerator
 #addin nuget:?package=Cake.Codecov&version=0.5.0
 
 var target = Argument("target", "Default");
@@ -148,14 +147,6 @@ Task("Generate-Coverage")
 });
 
 
-Task("Generate-Coverage-Report")
-.IsDependentOn("Generate-Coverage")
-.WithCriteria(() => isAppVeyor || coverageReport)
-.Does(() =>
-{
-    ReportGenerator("./coverage.xml","./artifacts/coverage-report");
-});
-
 
 Task("Upload-Coverage")
 .IsDependentOn("Generate-Coverage")
@@ -267,7 +258,6 @@ Task("Default")
   .IsDependentOn("Build Yaapii")
   .IsDependentOn("Test Yaapii")
   .IsDependentOn("Generate-Coverage")
-  .IsDependentOn("Generate-Coverage-Report")
   .IsDependentOn("Upload-Coverage")
   .IsDependentOn("Pack")
   .IsDependentOn("Release");
