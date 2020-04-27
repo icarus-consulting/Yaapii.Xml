@@ -74,7 +74,7 @@ namespace Yaapii.Xml
         {
             var schemas = new XmlSchemaSet();
             schemas.Add("", XmlReader.Create(new StringReader(this.schema.Value())));
-            IEnumerable<Exception> errors = new EnumerableOf<Exception>();
+            IEnumerable<Exception> errors = new ManyOf<Exception>();
             this.xml.Value().Validate(
                 schemas,
                 (obj, ex) => errors = new Joined<Exception>(errors, ex.Exception)

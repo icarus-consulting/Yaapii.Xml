@@ -23,7 +23,6 @@
 using Xunit;
 using Yaapii.Atoms.Text;
 using Yaapii.Xambly;
-using Yaapii.Xml;
 
 namespace Yaapii.Xml.Test
 {

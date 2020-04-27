@@ -49,8 +49,8 @@ namespace Yaapii.Xml
         /// <returns>The enumerator</returns>
         public IEnumerator<string> GetEnumerator()
         {
-            return 
-                new Mapped<XmlNode,string>(
+            return
+                new Mapped<XmlNode, string>(
                     node => node.InnerText,
                     new XpNodes(xpath, dom)
                 ).GetEnumerator();

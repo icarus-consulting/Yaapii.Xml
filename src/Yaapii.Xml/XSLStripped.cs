@@ -39,7 +39,7 @@ namespace Yaapii.Xml
         public XSLStripped() : base(
             new TextOf(
                 new ResourceOf(
-                    "Resources.strip.xsl", 
+                    "Resources.strip.xsl",
                     new ScalarOf<Assembly>(
                         () => Assembly.GetAssembly(typeof(XSLStripped))
                     )
