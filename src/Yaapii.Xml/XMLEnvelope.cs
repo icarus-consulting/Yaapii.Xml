@@ -37,9 +37,11 @@ namespace Yaapii.Xml
         /// <summary>
         /// An envelope for XML
         /// </summary>
-        public XMLEnvelope(IScalar<IXML> xml, bool shouldReload = false)
+        /// <param name="xml">The xml for the envelope</param>
+        /// <param name="live">Is the envelope live or sticky</param>
+        public XMLEnvelope(IScalar<IXML> xml, bool live = false)
         {
-            this.xml = new ScalarOf<IXML>(xml, (file) => shouldReload);
+            this.xml = new ScalarOf<IXML>(xml, (file) => live);
         }
 
         public XNode AsNode()
