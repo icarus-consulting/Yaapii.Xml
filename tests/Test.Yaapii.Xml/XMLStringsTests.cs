@@ -39,7 +39,7 @@ namespace Yaapii.Xml.Test
                     )
                 ).AsString()
             );
-                
+
         }
     }
 }

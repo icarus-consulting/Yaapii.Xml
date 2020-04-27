@@ -22,6 +22,7 @@
 
 using System;
 using Yaapii.Atoms;
+using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml
 {
@@ -30,9 +31,7 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XMLString : IScalar<string>
     {
-        private readonly IXML xml;
-        private readonly string xpath;
-        private readonly Func<string> fallback;
+        private readonly IScalar<string> result;
 
         /// <summary>
         /// A string in a document, retrieved by xpath.
@@ -62,9 +61,27 @@ namespace Yaapii.Xml
         /// </summary>
         internal XMLString(IXML xml, string xpath, Func<string> fallback)
         {
-            this.xml = xml;
-            this.xpath = xpath;
-            this.fallback = fallback;
+            this.result = new ScalarOf<string>(() =>
+            {
+
+                var matches = xml.Values(xpath);
+                var result = string.Empty;
+                if (matches.Count < 1)
+                {
+                    result = fallback();
+                }
+                else if (matches.Count > 1)
+                {
+                    throw new ArgumentException(
+                        $"Cannot retrieve single value with XPath '{xpath}' because it resulted in multiple values in document{Environment.NewLine}'{xml.AsNode().ToString()}'."
+                    );
+                }
+                else
+                {
+                    result = matches[0];
+                }
+                return result;
+            });
         }
 
         /// <summary>
@@ -72,23 +89,7 @@ namespace Yaapii.Xml
         /// </summary>
         public string Value()
         {
-            var matches = this.xml.Values(xpath);
-            var result = string.Empty;
-            if (matches.Count < 1)
-            {
-                result = this.fallback();
-            }
-            else if (matches.Count > 1)
-            {
-                throw new ArgumentException(
-                    $"Cannot retrieve single value with XPath '{this.xpath}' because it resulted in multiple values in document{Environment.NewLine}'{this.xml.AsNode().ToString()}'."
-                );
-            }
-            else
-            {
-                result = matches[0];
-            }
-            return result;
+            return this.result.Value();
         }
     }
 }

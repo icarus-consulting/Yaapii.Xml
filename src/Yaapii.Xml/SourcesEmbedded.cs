@@ -62,7 +62,7 @@ namespace Yaapii.Xml
 
         private SourcesEmbedded(IScalar<Assembly> asm, params string[] folders)
         {
-            this.folders = new Joined<string>(new EnumerableOf<string>(""), new EnumerableOf<string>(folders));
+            this.folders = new Joined<string>(new ManyOf<string>(""), new ManyOf<string>(folders));
             this.asm = asm;
         }
 

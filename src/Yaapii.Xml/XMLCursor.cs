@@ -60,7 +60,7 @@ namespace Yaapii.Xml
         /// <param name="xambler"> Xambler to make Xml from </param>
         public XMLCursor(Xambler xambler) : this(
             new TextOf(
-                new Sticky<string>(() => xambler.Xml())
+                new ScalarOf<string>(() => xambler.Xml())
             )
         )
         { }
@@ -82,7 +82,7 @@ namespace Yaapii.Xml
         /// <param name="stream"> stream with xml text </param>
         public XMLCursor(Stream stream, Encoding encoding) : this(
             new TextOf(
-                new InputOf(stream), 
+                new InputOf(stream),
                 encoding
             )
         )
@@ -109,7 +109,7 @@ namespace Yaapii.Xml
         /// <summary> XMLCursor from a file. </summary>
         /// <param name="file"> file to get xml text from </param>
         public XMLCursor(Uri file, Encoding encoding) : this(
-            new InputOf(file), 
+            new InputOf(file),
             encoding
         )
         { }
@@ -135,7 +135,7 @@ namespace Yaapii.Xml
         /// <summary> XMLCursor from <see cref="IText"/> </summary>
         /// <param name="text"> xml as text </param>
         public XMLCursor(IText text) : this(
-            new Sticky<XNode>(() =>
+            new ScalarOf<XNode>(() =>
             {
                 try
                 {
@@ -180,13 +180,13 @@ namespace Yaapii.Xml
                 }
                 return sb.ToString();
             };
-            this.xml = new Sticky<string>(
+            this.xml = new ScalarOf<string>(
                 () =>
                 {
                     return this.stringTransform.Invoke(node.Value());
                 });
-            this.cache = new Sticky<XNode>(node);
-            this.context = new Sticky<IXmlNamespaceResolver>(context);
+            this.cache = new ScalarOf<XNode>(node);
+            this.context = new ScalarOf<IXmlNamespaceResolver>(context);
         }
 
         /// <summary> The xml formatted as string. </summary>
