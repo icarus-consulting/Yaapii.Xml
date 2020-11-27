@@ -213,7 +213,7 @@ Task("GenerateCoverage")
                     }
                 );
             },
-            new FilePath($"{buildArtifacts}/coverage.xml"),
+            new FilePath($"{buildArtifacts.Path}/coverage.xml"),
             new OpenCoverSettings()
             {
                 OldStyle = true
@@ -252,7 +252,7 @@ Task("UploadCoverage")
 {
     Information(Figlet("UploadCoverage"));
     
-    Codecov($".{buildArtifacts}/coverage.xml", codeCovToken);
+    Codecov($"{buildArtifacts.Path}/coverage.xml", codeCovToken);
 });
 
 ///////////////////////////////////////////////////////////////////////////////
