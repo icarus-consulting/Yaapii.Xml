@@ -1,265 +1,355 @@
 #tool nuget:?package=GitReleaseManager
 #tool nuget:?package=OpenCover
-#tool nuget:?package=xunit.runner.console
 #tool nuget:?package=Codecov
-#addin nuget:?package=Cake.Codecov&version=0.5.0
+#addin "Cake.Figlet"
+#addin nuget:?package=Cake.Codecov
+#addin nuget:?package=Cake.AppVeyor
 
 var target = Argument("target", "Default");
-var configuration   = Argument<string>("configuration", "Release");
-var coverageReport = Argument<bool>("report", false);
+var configuration   = "Release";
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
-var buildArtifacts					= Directory("./artifacts/");
-var deployment						= Directory("./artifacts/deployment");
+// We define where the build artifacts should be places
+// this is relative to the project root folder
+var buildArtifacts                  = Directory("./artifacts");
+var deployment                      = Directory("./artifacts/deployment");
+var version                         = "1.0.0";
 
 ///////////////////////////////////////////////////////////////////////////////
-// YAAPII MODULES
+// MODULES
 ///////////////////////////////////////////////////////////////////////////////
-var ypXml							= Directory("./src/Yaapii.Xml");
-var ypXmlTests						= Directory("./tests/Test.Yaapii.Xml");
-var version							= "0.1.1";
+var modules = Directory("./src");
+// To skip building a project in the source folder add the project folder name
+// as string to the list e.g. "Yaapii.SimEngine.Tmx.Setup".
+var blacklistModules = new List<string>() { };
+
+// Unit tests
+var unitTests = Directory("./tests");
+// To skip executing a test in the tests folder add the test project folder name
+// as string to the list e.g. "TmxTest.Yaapii.Olp.Tmx.AllInOneRobot".
+var blacklistUnitTests = new List<string>() { }; 
 
 ///////////////////////////////////////////////////////////////////////////////
 // CONFIGURATION VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
-var isAppVeyor          = AppVeyor.IsRunningOnAppVeyor;
-var isWindows           = IsRunningOnWindows();
-var netcore             = "netcoreapp2.1";
-var net                 = "net461";
-var netstandard         = "netstandard2.0";
+var isAppVeyor                      = AppVeyor.IsRunningOnAppVeyor;
+var isWindows                       = IsRunningOnWindows();
 
-// Important for github release
-var owner = "icarus-consulting";
-var repository = "Yaapii.Xml";
+// For GitHub release
+var owner                           = "icarus-consulting";
+var repository                      = "Yaapii.Xml";
 
-var githubToken = "";
-var codecovToken = "";
+// For NuGetFeed
+var nuGetSource = "https://api.nuget.org/v3/index.json";
 
-
-///////////////////////////////////////////////////////////////////////////////
-// Clean
-///////////////////////////////////////////////////////////////////////////////
-Task("Clean")
-    .Does(() =>
-{
-    CleanDirectories(new DirectoryPath[] { buildArtifacts });
-});
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Restore
-///////////////////////////////////////////////////////////////////////////////
-Task("Restore")
-  .Does(() =>
-{
-	var projects = GetFiles("./**/*.csproj");
-
-	foreach(var project in projects)
-	{
-	    DotNetCoreRestore(project.GetDirectory().FullPath);
-    }
-});
+// API key tokens for deployment
+var gitHubToken                     = "";
+var nugetReleaseToken               = "";
+var codeCovToken                    = "";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Version
 ///////////////////////////////////////////////////////////////////////////////
 Task("Version")
-  .WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
-  .Does(() => 
+.WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+.Does(() => 
 {
+    Information(Figlet("Version"));
+    
     version = BuildSystem.AppVeyor.Environment.Repository.Tag.Name;
+    Information($"Set version to '{version}'");
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// Clean
+///////////////////////////////////////////////////////////////////////////////
+Task("Clean")
+.Does(() =>
+{
+    Information(Figlet("Clean"));
+    
+	// Clean the artifacts folder to prevent old builds be present
+	// https://cakebuild.net/dsl/directory-operations/
+    CleanDirectories(new DirectoryPath[] { buildArtifacts });
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// Restore
+///////////////////////////////////////////////////////////////////////////////
+Task("Restore")
+.Does(() =>
+{
+    Information(Figlet("Restore"));
+
+    NuGetRestore($"./{repository}.sln");
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// Appveyor Build
+///////////////////////////////////////////////////////////////////////////////
+Task("AppveyorBuild")
+.WithCriteria(() => isAppVeyor)
+.IsDependentOn("Version")
+.Does(() =>
+{
+    Information(Figlet("AppveyorBuild"));
+    
+    var appVeyorBuild = new AppVeyorBuild();
+    appVeyorBuild.Version = $"{version}.{appVeyorBuild.BuildNumber}";
 });
 
 ///////////////////////////////////////////////////////////////////////////////
 // Build
 ///////////////////////////////////////////////////////////////////////////////
-Task("Build Yaapii")
-  .IsDependentOn("Clean")
-  .IsDependentOn("Restore")
-  .IsDependentOn("Version")
-  .Does(() =>
-{
-	Information("__   __                _ _ ");
-	Information("\\ \\ / /_ _  __ _ _ __ (_|_)");
-	Information(" \\ V / _` |/ _` | '_ \\| | |");
-    Information("  | | (_| | (_| | |_) | | |");
-    Information("  |_|\\__,_|\\__,_| .__/|_|_|");
-	Information("                |_|");
-
-	DotNetCoreBuild(
-        ypXml,
-        new DotNetCoreBuildSettings()
-        {
-            Configuration = configuration,
-            Framework = netstandard,
-            MSBuildSettings = new DotNetCoreMSBuildSettings().SetVersionPrefix(version)
-        }
-    );
-
-});
-
-///////////////////////////////////////////////////////////////////////////////
-// Code Coverage
-///////////////////////////////////////////////////////////////////////////////
-Task("Generate-Coverage")
-.IsDependentOn("Build Yaapii")
-.WithCriteria(() => isAppVeyor || coverageReport)
-.Does(() => 
-{
-	try
-	{
-		var projectsToCover = new [] { ypXmlTests };
-        var dotNetCoreTestSettings =
-            new DotNetCoreTestSettings
-            {
-                Configuration = "Debug"
-            };
-
-        // remove coverage.xml if it exists.
-        if (FileExists("./coverage.xml"))
-        {
-            DeleteFile("./coverage.xml");
-        }
-       
-        
-        foreach(var proj in projectsToCover)
-        {
-           OpenCover(tool => 
-			{ 
-				tool.DotNetCoreTest(proj, dotNetCoreTestSettings);
-			
-			},
-			new FilePath("./coverage.xml"),
-			new OpenCoverSettings(){ OldStyle = true, MergeOutput = true }
-				.WithFilter("+[*]*")
-                .WithFilter("-[Test.*]*")
-                .WithFilter("-[*]*.Fk*") 
-                .WithFilter("-[*]*.Error.*") 
-		    );
-        }	
-	}
-	catch(Exception ex)
-	{
-		Information("Error: " + ex.ToString());
-	}
-});
-
-
-
-Task("Upload-Coverage")
-.IsDependentOn("Generate-Coverage")
-.IsDependentOn("GetAuth")
-.WithCriteria(() => isAppVeyor)
+Task("Build")
+.IsDependentOn("Clean")
+.IsDependentOn("Restore")
+.IsDependentOn("Version")
 .Does(() =>
 {
-    Codecov("coverage.xml", codecovToken);
+    Information(Figlet("Build"));
+
+	var settings = 
+		new DotNetCoreBuildSettings()
+		{
+			Configuration = configuration,
+			NoRestore = true,
+			MSBuildSettings = new DotNetCoreMSBuildSettings().SetVersionPrefix(version)
+		};
+	foreach(var module in GetSubDirectories(modules))
+	{
+		if(!blacklistModules.Contains(module.GetDirectoryName()))
+		{
+			Information($"Building {module.GetDirectoryName()}");
+			
+			DotNetCoreBuild(
+				module.FullPath,
+				settings
+			);
+		}
+		else
+		{
+			Warning($"Skipping build {module.GetDirectoryName()}");
+		}
+	}
 });
 
 ///////////////////////////////////////////////////////////////////////////////
 // Test
 ///////////////////////////////////////////////////////////////////////////////
-
-Task("Test Yaapii")
-  .IsDependentOn("Build Yaapii")
-  .Does(() => 
+Task("Test")
+.IsDependentOn("Build")
+.Does(() => 
 {
-	DotNetCoreTest(
-		ypXmlTests,
+    Information(Figlet("Unit Test"));
+
+	var settings = 
 		new DotNetCoreTestSettings()
 		{
 			Configuration = configuration,
-			Framework = netcore
+			NoRestore = true
+		};
+	foreach(var test in GetSubDirectories(unitTests))
+	{
+		if(!blacklistUnitTests.Contains(test.GetDirectoryName()))
+		{
+			Information($"Testing {test.GetDirectoryName()}");
+			DotNetCoreTest(
+				test.FullPath,
+				settings
+			);	
 		}
-	);
-
-});
+		else
+		{
+			Warning($"Skipping test {test.GetDirectoryName()}");
+		}
+	}
+});    
 
 ///////////////////////////////////////////////////////////////////////////////
-// Pack
+// Nuget
 ///////////////////////////////////////////////////////////////////////////////
-Task("Pack")
-    .IsDependentOn("Restore")
-    .IsDependentOn("Clean")
-    .Does(() =>
+Task("Nuget")
+.IsDependentOn("Clean")
+.IsDependentOn("Version")
+.Does(() =>
 {
-	
-	var settings = new DotNetCorePackSettings()
+    Information(Figlet("NuGet"));
+    
+    var settings = new DotNetCorePackSettings()
     {
         Configuration = configuration,
         OutputDirectory = buildArtifacts,
-	  	VersionSuffix = ""
+        VersionSuffix = ""
     };
-   
-	settings.MSBuildSettings = new DotNetCoreMSBuildSettings().SetVersionPrefix(version);
-	settings.ArgumentCustomization = args => args.Append("--include-symbols");
-
-   if (isAppVeyor)
-   {
-
-       var tag = BuildSystem.AppVeyor.Environment.Repository.Tag;
-       if(!tag.IsTag) 
-       {
-			settings.VersionSuffix = "build" + AppVeyor.Environment.Build.Number.ToString().PadLeft(5,'0');
-       } 
-	   else 
-	   {     
-			settings.MSBuildSettings = new DotNetCoreMSBuildSettings().SetVersionPrefix(tag.Name);
-       }
-   }
-
-	
-	DotNetCorePack(
-		ypXml.ToString(),
-		settings
-    );
+    settings.ArgumentCustomization = args => args.Append("--include-symbols");
+    settings.MSBuildSettings = new DotNetCoreMSBuildSettings().SetVersionPrefix(version);
+    
+    foreach(var module in GetSubDirectories(modules))
+	{
+		if(!blacklistModules.Contains(module.GetDirectoryName()))
+		{
+			Information($"Creating NuGet package for {module.GetDirectoryName()}");
+			
+			DotNetCorePack(
+				module.ToString(),
+				settings
+			);
+		}
+		else
+		{
+			Warning($"Skipping NuGet package for {module.GetDirectoryName()}");
+		}
+	}
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// Release
+// Code Coverage
 ///////////////////////////////////////////////////////////////////////////////
-Task("GetAuth")
-	.WithCriteria(() => isAppVeyor)
-    .Does(() =>
+Task("GenerateCoverage")
+.IsDependentOn("Build")
+.Does(() => 
 {
-    githubToken = EnvironmentVariable("GITHUB_TOKEN");
-	codecovToken = EnvironmentVariable("CODECOV_TOKEN");
+    Information(Figlet("GenerateCoverage"));
+    
+    try
+    {
+        OpenCover(
+            tool => 
+            {
+                tool.DotNetCoreTest(
+                    "./tests/Test.Yaapii.Xml/",
+                    new DotNetCoreTestSettings
+                    {
+                        Configuration = configuration
+                    }
+                );
+            },
+            new FilePath("./coverage.xml"),
+            new OpenCoverSettings()
+            {
+                OldStyle = true
+            }
+            .WithFilter("+[Yaapii.Xml]*")
+        );
+    }
+    catch(Exception ex)
+    {
+        Information("Error: " + ex.ToString());
+    }
 });
 
-Task("Release")
-  .WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
-  .IsDependentOn("Version")
-  .IsDependentOn("Pack")
-  .IsDependentOn("GetAuth")
-  .Does(() => {
-     GitReleaseManagerCreate(githubToken, owner, repository, new GitReleaseManagerCreateSettings {
-        Milestone         = version,
-        Name              = version,
-        Prerelease        = false,
-        TargetCommitish   = "master"
-    });
-
-	var nugetFiles = string.Join(", ", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
-	Information("Nuget artifacts: " + nugetFiles);
-
-	GitReleaseManagerAddAssets(
-		githubToken,
-		owner,
-		repository,
-		version,
-		nugetFiles
-	);
-
-	GitReleaseManagerPublish(githubToken, owner, repository, version);
+///////////////////////////////////////////////////////////////////////////////
+// Credentials
+///////////////////////////////////////////////////////////////////////////////
+Task("Credentials")
+.WithCriteria(() => isAppVeyor)
+.Does(() =>
+{
+    Information(Figlet("Credentials"));
+    
+	gitHubToken = EnvironmentVariable("GITHUB_TOKEN");
+	nugetReleaseToken = EnvironmentVariable("NUGET_TOKEN");
+    codeCovToken = EnvironmentVariable("CODECOV_TOKEN");
 });
 
+///////////////////////////////////////////////////////////////////////////////
+// UploadCoverage
+///////////////////////////////////////////////////////////////////////////////
+Task("UploadCoverage")
+.IsDependentOn("GenerateCoverage")
+.IsDependentOn("Credentials")
+.WithCriteria(() => isAppVeyor)
+.Does(() =>
+{
+    Information(Figlet("UploadCoverage"));
+    
+    Codecov("coverage.xml", codeCovToken);
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// GitHubRelease
+///////////////////////////////////////////////////////////////////////////////
+Task("GitHubRelease")
+.WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+.IsDependentOn("Nuget")
+.IsDependentOn("Version")
+.IsDependentOn("Credentials")
+.Does(() => 
+{
+    Information(Figlet("GitHub Release"));
+    
+    GitReleaseManagerCreate(
+        gitHubToken,
+        owner,
+        repository, 
+        new GitReleaseManagerCreateSettings {
+            Milestone         = version,
+            Name              = version,
+            Prerelease        = false,
+            TargetCommitish   = "master"
+        }
+    );
+
+    // Collect here all files you need for the release on GitHub
+    // e.g. you can zip the whole artifacts folder deploy the zip
+    // here you see an expample to deploy all nuget packages in the root of the artifacts folder:
+    var nugets = string.Join(",", GetFiles("./artifacts/*.nupkg").Select(f => f.FullPath) );
+    Information($"Release files:{Environment.NewLine}  " + nugets.Replace(",", $"{Environment.NewLine}  "));
+    GitReleaseManagerAddAssets(
+        gitHubToken,
+        owner,
+        repository,
+        version,
+        nugets
+    );
+    GitReleaseManagerPublish(gitHubToken, owner, repository, version);
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// NuGetFeed
+///////////////////////////////////////////////////////////////////////////////
+Task("NuGetFeed")
+.WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
+.IsDependentOn("Nuget")
+.Does(() => 
+{
+    Information(Figlet("NuGetFeed"));
+    
+    var nugets = GetFiles($"{buildArtifacts.Path}/*.nupkg");
+    foreach(var package in nugets)
+    {
+        if(!package.GetFilename().FullPath.EndsWith("symbols.nupkg"))
+        {
+            NuGetPush(
+                package,
+                new NuGetPushSettings {
+                    Source = nuGetSource,
+                    ApiKey = nugetReleaseToken
+                }
+            );
+        }
+    }
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// Default
+///////////////////////////////////////////////////////////////////////////////
 Task("Default")
-  .IsDependentOn("Build Yaapii")
-  .IsDependentOn("Test Yaapii")
-  .IsDependentOn("Generate-Coverage")
-  .IsDependentOn("Upload-Coverage")
-  .IsDependentOn("Pack")
-  .IsDependentOn("Release");
+.IsDependentOn("Version")
+.IsDependentOn("AppveyorBuild")
+.IsDependentOn("Clean")
+.IsDependentOn("Restore")
+.IsDependentOn("Build")
+.IsDependentOn("Test")
+.IsDependentOn("Nuget")
+.IsDependentOn("GenerateCoverage")
+.IsDependentOn("Credentials")
+.IsDependentOn("UploadCoverage")
+.IsDependentOn("GitHubRelease")
+.IsDependentOn("NuGetFeed")
+;
 
 RunTarget(target);
