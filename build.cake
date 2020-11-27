@@ -63,6 +63,21 @@ Task("Version")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
+// Appveyor Build
+///////////////////////////////////////////////////////////////////////////////
+Task("AppveyorBuild")
+.WithCriteria(() => isAppVeyor)
+.IsDependentOn("Version")
+.Does(() =>
+{
+    Information(Figlet("AppveyorBuild"));
+    
+    var appVeyorBuild = new AppVeyorBuild();
+    appVeyorBuild.Version = $"{version}.{appVeyorBuild.BuildNumber}";
+    Information($"{version}.{appVeyorBuild.BuildNumber}");
+});
+
+///////////////////////////////////////////////////////////////////////////////
 // Clean
 ///////////////////////////////////////////////////////////////////////////////
 Task("Clean")
@@ -84,20 +99,6 @@ Task("Restore")
     Information(Figlet("Restore"));
 
     NuGetRestore($"./{repository}.sln");
-});
-
-///////////////////////////////////////////////////////////////////////////////
-// Appveyor Build
-///////////////////////////////////////////////////////////////////////////////
-Task("AppveyorBuild")
-.WithCriteria(() => isAppVeyor)
-.IsDependentOn("Version")
-.Does(() =>
-{
-    Information(Figlet("AppveyorBuild"));
-    
-    var appVeyorBuild = new AppVeyorBuild();
-    appVeyorBuild.Version = $"{version}.{appVeyorBuild.BuildNumber}";
 });
 
 ///////////////////////////////////////////////////////////////////////////////
