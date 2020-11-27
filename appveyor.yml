@@ -5,10 +5,8 @@ version: 1.0.{build}
 image: Visual Studio 2017
 configuration: Release
 environment:
-  GITHUB_USERNAME:
-    secure: 91yyZaesa1lLhAxe/rbyRw==
-  GITHUB_PASSWORD:
-    secure: aNMjoL/oNVTBl2RAEXLFeg==
+  GITHUB_TOKEN:
+    secure: tvoyJ/iv8Y+9VaKvOFvxegvQFBNqPkhiwghS8lQDsrt7B/1MWU4e8uOHQzfTU580
 # Do not build feature branch with open Pull Requests
 skip_branch_with_pr: true
 # Automatically register private account and/or project AppVeyor NuGet feeds.
@@ -30,4 +28,13 @@ deploy:
     api_key:
       secure: wVt1RgJAnhNTyIjtK9yFkQbEEM+fBk1TLUzo0j3pe2U=
     skip_symbols: true
+    artifact: /.*\.nupkg/
+  - provider: NuGet
+    name: Nuget feed
+    on:
+      #branch: master
+      appveyor_repo_tag: true
+    api_key:
+      secure: P2AbVXF6ZhkWoNAFjmIhzMH3FEgJkFtXPozru7MTOWRn6HCRiq3Dz+TP36knnevg
+    skip_symbols: false
     artifact: /.*\.nupkg/

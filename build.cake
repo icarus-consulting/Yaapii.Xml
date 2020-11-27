@@ -2,8 +2,7 @@
 #tool nuget:?package=OpenCover
 #tool nuget:?package=xunit.runner.console
 #tool nuget:?package=Codecov
-#tool nuget:?package=ReportGenerator
-#addin nuget:?package=Cake.Codecov
+#addin nuget:?package=Cake.Codecov&version=0.5.0
 
 var target = Argument("target", "Default");
 var configuration   = Argument<string>("configuration", "Release");
@@ -20,14 +19,14 @@ var deployment						= Directory("./artifacts/deployment");
 ///////////////////////////////////////////////////////////////////////////////
 var ypXml							= Directory("./src/Yaapii.Xml");
 var ypXmlTests						= Directory("./tests/Test.Yaapii.Xml");
-var version							= "0.1.0";
+var version							= "0.1.1";
 
 ///////////////////////////////////////////////////////////////////////////////
 // CONFIGURATION VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
 var isAppVeyor          = AppVeyor.IsRunningOnAppVeyor;
 var isWindows           = IsRunningOnWindows();
-var netcore             = "netcoreapp2.0";
+var netcore             = "netcoreapp2.1";
 var net                 = "net461";
 var netstandard         = "netstandard2.0";
 
@@ -35,8 +34,7 @@ var netstandard         = "netstandard2.0";
 var owner = "icarus-consulting";
 var repository = "Yaapii.Xml";
 
-var username = "";
-var password = "";
+var githubToken = "";
 var codecovToken = "";
 
 
@@ -112,9 +110,7 @@ Task("Generate-Coverage")
 {
 	try
 	{
-		var projectsToCover = new [] {
-                ypXmlTests
-			};
+		var projectsToCover = new [] { ypXmlTests };
         var dotNetCoreTestSettings =
             new DotNetCoreTestSettings
             {
@@ -151,18 +147,10 @@ Task("Generate-Coverage")
 });
 
 
-Task("Generate-Coverage-Report")
-.IsDependentOn("Generate-Coverage")
-.WithCriteria(() => isAppVeyor || coverageReport)
-.Does(() =>
-{
-    ReportGenerator("./coverage.xml","./artifacts/coverage-report");
-});
-
 
 Task("Upload-Coverage")
 .IsDependentOn("Generate-Coverage")
-.IsDependentOn("GetCredentials")
+.IsDependentOn("GetAuth")
 .WithCriteria(() => isAppVeyor)
 .Does(() =>
 {
@@ -231,12 +219,11 @@ Task("Pack")
 ///////////////////////////////////////////////////////////////////////////////
 // Release
 ///////////////////////////////////////////////////////////////////////////////
-Task("GetCredentials")
+Task("GetAuth")
 	.WithCriteria(() => isAppVeyor)
     .Does(() =>
 {
-    username = EnvironmentVariable("GITHUB_USERNAME");
-    password = EnvironmentVariable("GITHUB_PASSWORD");
+    githubToken = EnvironmentVariable("GITHUB_TOKEN");
 	codecovToken = EnvironmentVariable("CODECOV_TOKEN");
 });
 
@@ -244,34 +231,34 @@ Task("Release")
   .WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
   .IsDependentOn("Version")
   .IsDependentOn("Pack")
-  .IsDependentOn("GetCredentials")
+  .IsDependentOn("GetAuth")
   .Does(() => {
-     GitReleaseManagerCreate(username, password, owner, repository, new GitReleaseManagerCreateSettings {
-            Milestone         = version,
-            Name              = version,
-            Prerelease        = false,
-            TargetCommitish   = "master"
+     GitReleaseManagerCreate(githubToken, owner, repository, new GitReleaseManagerCreateSettings {
+        Milestone         = version,
+        Name              = version,
+        Prerelease        = false,
+        TargetCommitish   = "master"
     });
 
-	var nugetFiles = string.Join(";", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
+	var nugetFiles = string.Join(", ", GetFiles("./artifacts/**/*.nupkg").Select(f => f.FullPath) );
 	Information("Nuget artifacts: " + nugetFiles);
 
 	GitReleaseManagerAddAssets(
-		username,
-		password,
+		githubToken,
 		owner,
 		repository,
 		version,
 		nugetFiles
-		);
-	});
+	);
+
+	GitReleaseManagerPublish(githubToken, owner, repository, version);
+});
 
 Task("Default")
   .IsDependentOn("Build Yaapii")
   .IsDependentOn("Test Yaapii")
   .IsDependentOn("Generate-Coverage")
-  .IsDependentOn("Generate-Coverage-Report")
-  //.IsDependentOn("Upload-Coverage") codecov cannot be used, we have a private repo.
+  .IsDependentOn("Upload-Coverage")
   .IsDependentOn("Pack")
   .IsDependentOn("Release");
 

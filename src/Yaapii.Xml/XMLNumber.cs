@@ -21,41 +21,58 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using System.Globalization;
+using Yaapii.Atoms;
+using Yaapii.Atoms.Number;
+using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml
 {
-    public interface IXSL
+    /// <summary>
+    /// Number extracted from an xml using xpath.
+    /// </summary>
+    public sealed class XMLNumber : INumber
     {
-        /// <summary>
-        /// Transform XML to another one.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
+        private readonly IScalar<INumber> number;
 
         /// <summary>
-        /// Transform XML to text.
+        /// Number extracted from an xml using xpath.
         /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
+        public XMLNumber(IXML xml, string xpath) : this(xml, xpath, CultureInfo.InvariantCulture)
+        { }
 
         /// <summary>
-        /// Register a new source for XSL imports.
+        /// Number extracted from an xml using xpath.
         /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
+        public XMLNumber(IXML xml, string xpath, IFormatProvider provider)
+        {
+            this.number =
+                new ScalarOf<INumber>(() =>
+                    new NumberOf(
+                        new XMLString(xml, xpath).Value(), 
+                        provider
+                    )
+                );
+        }
 
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        public double AsDouble()
+        {
+            return this.number.Value().AsDouble();
+        }
+
+        public float AsFloat()
+        {
+            return this.number.Value().AsFloat();
+        }
+
+        public int AsInt()
+        {
+            return this.number.Value().AsInt();
+        }
+
+        public long AsLong()
+        {
+            return this.number.Value().AsLong();
+        }
     }
 }

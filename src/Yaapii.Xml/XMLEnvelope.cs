@@ -20,42 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using System.Xml.Linq;
+using Yaapii.Atoms;
+using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml
 {
-    public interface IXSL
+    /// <summary>
+    /// An envelope for XML
+    /// </summary>
+    public abstract class XMLEnvelope : IXML
     {
-        /// <summary>
-        /// Transform XML to another one.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
+        private readonly IScalar<IXML> xml;
 
         /// <summary>
-        /// Transform XML to text.
+        /// An envelope for XML
         /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
+        /// <param name="xml">The xml for the envelope</param>
+        /// <param name="live">Is the envelope live or sticky</param>
+        public XMLEnvelope(IScalar<IXML> xml, bool live = false)
+        {
+            this.xml = new ScalarOf<IXML>(xml, (file) => live);
+        }
 
-        /// <summary>
-        /// Register a new source for XSL imports.
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
+        public XNode AsNode()
+        {
+            return this.xml.Value().AsNode();
+        }
 
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        public IList<IXML> Nodes(string query)
+        {
+            return this.xml.Value().Nodes(query);
+
+        }
+
+        public IList<string> Values(string query)
+        {
+            return this.xml.Value().Values(query);
+
+        }
+
+        public IXML WithNamespace(string prefix, object uri)
+        {
+            return this.xml.Value().WithNamespace(prefix, uri);
+        }
     }
 }

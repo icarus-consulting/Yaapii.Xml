@@ -1,4 +1,26 @@
-﻿using System;
+﻿// MIT License
+//
+// Copyright(c) 2019 ICARUS Consulting GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -14,8 +36,8 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XPathContext : IXmlNamespaceResolver
     {
-        private readonly IEnumerable<IScalar<IXmlNamespaceResolver>> _contexts;
-        private readonly IDictionary<string, string> _map;
+        private readonly IEnumerable<IScalar<IXmlNamespaceResolver>> contexts;
+        private readonly IDictionary<string, string> map;
 
         private const string XML_NS_PREFIX = "xml";
         private const string XML_NS_URI = "http://www.w3.org/XML/1998/namespace";
@@ -84,7 +106,7 @@ namespace Yaapii.Xml
         /// <param name="nsuri">new namespace uri</param>
         public XPathContext(IDictionary<string, string> old, string prefix, string nsuri) : this(
             new MapOf<string, string>(
-                new Joined<KeyValuePair<string, string>>(
+                new Atoms.Enumerable.Joined<KeyValuePair<string, string>>(
                     old,
                     new KeyValuePair<string, string>(prefix, nsuri)
                     )
@@ -113,8 +135,8 @@ namespace Yaapii.Xml
         /// <param name="contexts">existing contexts</param>
         private XPathContext(IDictionary<string, string> map, IEnumerable<IScalar<IXmlNamespaceResolver>> contexts)
         {
-            _map = map;
-            _contexts = contexts;
+            this.map = map;
+            this.contexts = contexts;
         }
 
         /// <summary>
@@ -149,7 +171,7 @@ namespace Yaapii.Xml
 
             foreach (var entry in GetNamespacesInScope(XmlNamespaceScope.All))
             {
-                if(entry.Value.Equals(namespaceName))
+                if (entry.Value.Equals(namespaceName))
                 {
                     prefix = entry.Key;
                     break;
@@ -167,7 +189,7 @@ namespace Yaapii.Xml
         {
             IDictionary<string, string> result = new Dictionary<string, string>();
 
-            foreach (var kvp in this._map)
+            foreach (var kvp in this.map)
             {
                 if (scope != XmlNamespaceScope.ExcludeXml
                     ||
@@ -178,7 +200,7 @@ namespace Yaapii.Xml
                 }
             }
 
-            foreach (var ctx in this._contexts)
+            foreach (var ctx in this.contexts)
             {
                 IEnumerable<KeyValuePair<string, string>> namespaces =
                     ctx.Value().GetNamespacesInScope(scope);
@@ -199,7 +221,7 @@ namespace Yaapii.Xml
                     ", ",
                     new Mapped<KeyValuePair<string, string>, string>(
                         pair => pair.Key + "=" + pair.Value,
-                        this._map
+                        this.map
                     )
                 );
         }
@@ -211,10 +233,10 @@ namespace Yaapii.Xml
         /// <returns></returns>
         private IEnumerable<string> FromMap(string prefix)
         {
-            var ns = new EnumerableOf<string>();
-            if (this._map.ContainsKey(prefix))
+            var ns = new ManyOf<string>();
+            if (this.map.ContainsKey(prefix))
             {
-                ns = new EnumerableOf<string>(this._map[prefix]);
+                ns = new ManyOf<string>(this.map[prefix]);
             }
             return ns;
         }
@@ -226,13 +248,13 @@ namespace Yaapii.Xml
         /// <returns>list with one or no result</returns>
         private IEnumerable<string> FromContexts(string prefix)
         {
-            IEnumerable<string> ns = new EnumerableOf<string>();
-            foreach (IScalar<IXmlNamespaceResolver> ctx in this._contexts)
+            IEnumerable<string> ns = new ManyOf<string>();
+            foreach (IScalar<IXmlNamespaceResolver> ctx in this.contexts)
             {
                 string uri = ctx.Value().LookupNamespace(prefix);
                 if (uri != null)
                 {
-                    ns = new EnumerableOf<string>(uri);
+                    ns = new ManyOf<string>(uri);
                 }
             }
             return ns;
@@ -249,15 +271,15 @@ namespace Yaapii.Xml
 
             if (prefix.Equals(XML_NS_PREFIX)) //Defined by the XML specification to be "xml"
             {
-                ns = new EnumerableOf<string>(XML_NS_URI); //Defined by the XML specification
+                ns = new ManyOf<string>(XML_NS_URI); //Defined by the XML specification
             }
             else if (prefix.Equals(XMLNS_ATTRIBUTE)) //Defined by the XML specification to be "xmlns"
             {
-                ns = new EnumerableOf<string>(XMLNS_ATTRIBUTE_NS_URI); //Defined by the XML specification
+                ns = new ManyOf<string>(XMLNS_ATTRIBUTE_NS_URI); //Defined by the XML specification
             }
             else
             {
-                ns = new EnumerableOf<string>(NULL_NS_URI);
+                ns = new ManyOf<string>(NULL_NS_URI);
             }
             return ns;
         }

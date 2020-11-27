@@ -20,42 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using Xunit;
+using Yaapii.Atoms.Text;
 
-namespace Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
-    public interface IXSL
+    public sealed class XMLTextsTests
     {
-        /// <summary>
-        /// Transform XML to another one.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
+        [Fact]
+        public void DeliversTexts()
+        {
+            Assert.Equal(
+                "1,2",
+                new Joined(",",
+                    new XMLStrings(
+                        "/a/b/text()",
+                        new XMLCursor("<a><b>1</b><b>2</b></a>")
+                    )
+                ).AsString()
+            );
 
-        /// <summary>
-        /// Transform XML to text.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
-
-        /// <summary>
-        /// Register a new source for XSL imports.
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
-
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        }
     }
 }

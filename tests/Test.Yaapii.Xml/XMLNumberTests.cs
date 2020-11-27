@@ -23,39 +23,58 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
+using Xunit;
 
-namespace Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
-    public interface IXSL
+    public sealed class XMLNumberTests
     {
-        /// <summary>
-        /// Transform XML to another one.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
+        [Fact]
+        public void ExtractsDouble()
+        {
+            Assert.Equal(
+                1.2,
+                new XMLNumber(
+                    new XMLCursor("<root>1.2</root>"),
+                    "/root/text()"
+                ).AsDouble()
+            );
+        }
 
-        /// <summary>
-        /// Transform XML to text.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
+        [Fact]
+        public void ExtractsInt()
+        {
+            Assert.Equal(
+                2,
+                new XMLNumber(
+                    new XMLCursor("<root>2</root>"),
+                    "/root/text()"
+                ).AsInt()
+            );
+        }
 
-        /// <summary>
-        /// Register a new source for XSL imports.
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
+        [Fact]
+        public void ExtractsFloat()
+        {
+            Assert.Equal(
+                2.3f,
+                new XMLNumber(
+                    new XMLCursor("<root>2.3</root>"),
+                    "/root/text()"
+                ).AsFloat()
+            );
+        }
 
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        [Fact]
+        public void ExtractsLong()
+        {
+            Assert.Equal(
+                23,
+                new XMLNumber(
+                    new XMLCursor("<root>23</root>"),
+                    "/root/text()"
+                ).AsLong()
+            );
+        }
     }
 }

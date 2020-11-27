@@ -17,12 +17,12 @@ namespace Yaapii.Xml
         /// <summary>
         /// xpath
         /// </summary>
-        private readonly IText _xpath;
+        private readonly IText xpath;
 
         /// <summary>
         /// document
         /// </summary>
-        private readonly XmlNode _dom;
+        private readonly XmlNode dom;
 
         /// <summary>
         /// Extracted values from dom using given xpath
@@ -39,8 +39,8 @@ namespace Yaapii.Xml
         /// <param name="dom">document</param>
         public XpValues(IText xpath, XmlNode dom)
         {
-            _xpath = xpath;
-            _dom = dom;
+            this.xpath = xpath;
+            this.dom = dom;
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace Yaapii.Xml
         /// <returns>The enumerator</returns>
         public IEnumerator<string> GetEnumerator()
         {
-            return 
-                new Mapped<XmlNode,string>(
+            return
+                new Mapped<XmlNode, string>(
                     node => node.InnerText,
-                    new XpNodes(_xpath, _dom)
+                    new XpNodes(xpath, dom)
                 ).GetEnumerator();
         }
 

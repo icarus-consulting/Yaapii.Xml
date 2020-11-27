@@ -20,42 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using Yaapii.Atoms.Enumerable;
 
 namespace Yaapii.Xml
 {
-    public interface IXSL
+    /// <summary>
+    /// Strings in a document, retrieved by xpath.
+    /// </summary>
+    public sealed class XMLStrings : ManyEnvelope<string>
     {
         /// <summary>
-        /// Transform XML to another one.
+        /// Strings in a document, retrieved by xpath.
         /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
-
-        /// <summary>
-        /// Transform XML to text.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
-
-        /// <summary>
-        /// Register a new source for XSL imports.
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
-
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        public XMLStrings(string xpath, IXML xml) : base(
+            () => xml.Values(xpath),
+            false
+        )
+        { }
     }
 }

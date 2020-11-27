@@ -20,42 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+using Xunit;
+using Yaapii.Atoms.IO;
 
-namespace Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
-    public interface IXSL
+    public sealed class XSDErrorsTests
     {
-        /// <summary>
-        /// Transform XML to another one.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed document</returns>
-        IXML Transformed(IXML xml);
-
-        /// <summary>
-        /// Transform XML to text.
-        /// </summary>
-        /// <param name="xml">xml document</param>
-        /// <returns>transformed text</returns>
-        string TransformedToText(IXML xml);
-
-        /// <summary>
-        /// Register a new source for XSL imports.
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns>XSL with registered sources</returns>
-        IXSL With(XmlResolver sources);
-
-        /// <summary>
-        /// Register a new parameter used in transformation.
-        /// </summary>
-        /// <param name="name">the name</param>
-        /// <param name="value">the value</param>
-        /// <returns>new XSL with registered parameter</returns>
-        IXSL With(string name, object value);
+        [Fact]
+        public void ValidXml()
+        {
+            Assert.Empty(
+                new XSDErrors(
+                    new XMLCursor(new ResourceOf("Assets/example.xml", typeof(IXML))),
+                    new XMLCursor(new ResourceOf("Assets/example-schema.xsd", typeof(IXML)))
+                )
+            );
+        }
     }
 }

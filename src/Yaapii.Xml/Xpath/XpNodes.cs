@@ -12,8 +12,8 @@ namespace Yaapii.Xml.XPath
     /// </summary>
     public class XpNodes : IEnumerable<XmlNode>
     {
-        private readonly IText _xpath;
-        private readonly XmlNode _dom;
+        private readonly IText xpath;
+        private readonly XmlNode dom;
 
         /// <summary>
         /// Extracted nodes from dom using xpath
@@ -30,8 +30,8 @@ namespace Yaapii.Xml.XPath
         /// <param name="dom">document</param>
         public XpNodes(IText xpath, XmlNode dom)
         {
-            _xpath = xpath;
-            _dom = dom;
+            this.xpath = xpath;
+            this.dom = dom;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Yaapii.Xml.XPath
         /// <returns>The enumerator</returns>
         public IEnumerator<XmlNode> GetEnumerator()
         {
-            var lst = _dom.SelectNodes(_xpath.AsString());
+            var lst = dom.SelectNodes(xpath.AsString());
 
             var result = new List<XmlNode>();
             foreach (var xmlNode in lst)
