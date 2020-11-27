@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{758D0EE5-A320-4FDC-BB6A-588FF119B9B9}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{758D0E
 		build.ps1 = build.ps1
 		codecov.yml = codecov.yml
 		integration-test.yml = integration-test.yml
-		package.json = package.json
 		README.md = README.md
 	EndProjectSection
 EndProject
