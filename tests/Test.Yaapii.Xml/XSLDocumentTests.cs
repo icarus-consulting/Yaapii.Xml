@@ -20,10 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Xunit;
 using Yaapii.Atoms.IO;
-using Yaapii.Xml;
+using Yaapii.Atoms.Map;
+using Yaapii.Atoms.Text;
 
 namespace Yaapii.Xml.Test
 {
@@ -54,7 +58,7 @@ namespace Yaapii.Xml.Test
         {
             new TidyFileList(
                 Path.Combine(Directory.GetCurrentDirectory(), "Test"),
-                new MapOf<string, string>(
+                new MapOf(
                     new KeyValuePair<string, string>(
                         "demo.xsl",
                         new TextOf(
@@ -72,9 +76,11 @@ namespace Yaapii.Xml.Test
                             new Uri("file://" + Path.Combine(Directory.GetCurrentDirectory(), "Test/demo.xsl"))
                         );
 
-                    AssertXml.HasNode(
-                        xsl.Transformed(new XMLQuery("<a/>")),
-                        "/done"
+                    Assert.Equal(
+                        1,
+                        xsl.Transformed(
+                            new XMLCursor("<a/>")
+                        ).Nodes("/done").Count
                     );
                 }
             ).Invoke();
@@ -85,7 +91,7 @@ namespace Yaapii.Xml.Test
         {
             new TidyFileList(
                 Path.Combine(Directory.GetCurrentDirectory(), "Test"),
-                new MapOf<string, string>(
+                new MapOf(
                     new KeyValuePair<string, string>(
                         "first.xsl",
                         new TextOf(
@@ -107,9 +113,11 @@ namespace Yaapii.Xml.Test
                             )
                         );
 
-                    AssertXml.HasNode(
-                        xsl.Transformed(new XMLQuery("<simple-test/>")),
-                        "/result[.=6]"
+                    Assert.Equal(
+                        1,
+                        xsl.Transformed(
+                            new XMLCursor("<simple-test/>")
+                        ).Nodes("/result[.=6]").Count
                     );
                 }
             ).Invoke();
@@ -118,17 +126,19 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void TakesIInput()
         {
-            IXSL xsl =
+            var xsl =
                 new XSLDocument(
-                        new ResourceOf(
-                            "Resources/CreatesDone.xsl",
-                            Assembly.GetExecutingAssembly()
+                    new ResourceOf(
+                        "Resources/CreatesDone.xsl",
+                        Assembly.GetExecutingAssembly()
                     )
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery("<a/>")),
-                "/done"
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<a/>")
+                ).Nodes("/done").Count
             );
         }
 
@@ -169,9 +179,11 @@ namespace Yaapii.Xml.Test
                     ).AsString()
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery("<a/>")),
-                "/done"
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<a/>")
+                ).Nodes("/done").Count
             );
         }
 
@@ -192,9 +204,11 @@ namespace Yaapii.Xml.Test
                     )
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery("<simple-test/>")),
-                "/result[.=6]"
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result[.=6]").Count
             );
         }
 
@@ -213,14 +227,16 @@ namespace Yaapii.Xml.Test
                         Assembly.GetExecutingAssembly(),
                         "Resources"
                     ),
-                    new MapOf<string, object>(
+                    new MapOf<object>(
                         new KeyValuePair<string, object>("faa", 9)
                     )
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery("<simple-test/>")),
-                "/result/number[text() = 9]"
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result/number[text() = 9]").Count
             );
         }
 
@@ -239,14 +255,16 @@ namespace Yaapii.Xml.Test
                         Assembly.GetExecutingAssembly(),
                         "Resources"
                     ),
-                    new MapOf<string, object>(
+                    new MapOf<object>(
                         new KeyValuePair<string, object>("faa", 9)
                     )
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery("<simple-test/>")),
-                "/result/number[text() = 9]"
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result/number[text() = 9]").Count
             );
         }
     }

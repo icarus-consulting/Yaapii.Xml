@@ -26,9 +26,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Xunit;
-using Yaapii.Atoms.Enumerable;
+using Yaapii.Atoms.IO;
 
-namespace Test.Yaapii.Xml
+namespace Yaapii.Xml.Test
 {
     public sealed class XMLCursorTests
     {
@@ -37,7 +37,7 @@ namespace Test.Yaapii.Xml
         {
             IXML doc =
                 new XMLCursor(
-                    new Atoms.IO.InputOf(
+                    new InputOf(
                         "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                     )
                 );
@@ -78,7 +78,7 @@ namespace Test.Yaapii.Xml
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLCursor(
-                    new Yaapii.Atoms.IO.InputOf(inBytes),
+                    new InputOf(inBytes),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -97,7 +97,7 @@ namespace Test.Yaapii.Xml
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLCursor(
-                    new Yaapii.Atoms.IO.InputOf(inBytes).Stream(),
+                    new InputOf(inBytes).Stream(),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -117,7 +117,7 @@ namespace Test.Yaapii.Xml
                 var path = Path.Combine(tmp.Value().FullName, "encoded.txt");
 
                 File.WriteAllBytes(
-                    path, 
+                    path,
                     inBytes
                 );
 
@@ -168,7 +168,7 @@ namespace Test.Yaapii.Xml
         {
             IXML doc =
                new XMLCursor(
-                   new Atoms.IO.InputOf(
+                   new InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
                );
@@ -185,7 +185,7 @@ namespace Test.Yaapii.Xml
         {
             IXML doc =
                new XMLCursor(
-                   new Atoms.IO.InputOf(
+                   new InputOf(
                        "<root><a><x attr='test'>1</x></a><a><x>2</x></a></root>"
                    )
                );
@@ -203,16 +203,15 @@ namespace Test.Yaapii.Xml
                     "<html xmlns='http://www.w3.org/1999/xhtml'><div>\u0443\u0440\u0430!</div></html>"
                 );
 
-            Assert.True(
-                new LengthOf(
-                    doc.Nodes("/xhtml:html/xhtml:div")
-                ).Value() == 1
+            Assert.Equal(
+                1,
+                doc.Nodes("/xhtml:html/xhtml:div").Count
             );
 
-            Assert.True(
-                new LengthOf(
-                    doc.Nodes("//xhtml:div[.='\u0443\u0440\u0430!']")
-                ).Value() == 1);
+            Assert.Equal(
+                1,
+                doc.Nodes("//xhtml:div[.='\u0443\u0440\u0430!']").Count
+            );
         }
 
         [Fact]
@@ -247,15 +246,14 @@ namespace Test.Yaapii.Xml
                     )
                 );
 
-            Assert.True(
-                new LengthOf(
-                    doc.Nodes("//a")
-                ).Value() == 2);
-
-            Assert.True(
-                doc
-                .Nodes("/root/a")[0]
-                .Values("x/text()")[0] == "1");
+            Assert.Equal(
+                2,
+                doc.Nodes("//a").Count
+            );
+            Assert.Equal(
+                "1",
+                doc.Nodes("/root/a")[0].Values("x/text()")[0]
+            );
         }
 
         [Fact]
@@ -382,11 +380,11 @@ namespace Test.Yaapii.Xml
             var left = new XMLCursor("<hi><dude>  </dude></hi>");
             var right = new XMLCursor("<hi><dude>  </dude></hi>");
 
-            Assert.Equal<XMLCursor>(
+            Assert.Equal(
                 left, right
             );
 
-            Assert.NotEqual<XMLCursor>(
+            Assert.NotEqual(
                 new XMLCursor("<hi><man></man></hi>"),
                 new XMLCursor("<hi><man>  </man></hi>")
             );
@@ -395,11 +393,12 @@ namespace Test.Yaapii.Xml
         [Fact]
         public void PreservesXmlNamespaces()
         {
-            String xml = "<a xmlns='http://www.w3.org/1999/xhtml'><b/></a>";
-            Assert.True(
-                new LengthOf(
-                    new XMLCursor(xml).Nodes("/xhtml:a/xhtml:b")
-                ).Value() == 1);
+            var xml = "<a xmlns='http://www.w3.org/1999/xhtml'><b/></a>";
+
+            Assert.Equal(
+                1,
+                new XMLCursor(xml).Nodes("/xhtml:a/xhtml:b").Count
+            );
         }
 
         [Fact]
@@ -419,7 +418,7 @@ namespace Test.Yaapii.Xml
         {
             IXML xml = new XMLCursor("<r1><a><b>1</b></a><a><b>2</b></a></r1>");
 
-            foreach(var node in xml.Nodes("/r1/a/b"))
+            foreach (var node in xml.Nodes("/r1/a/b"))
             {
                 //This was a usecase where the bug occured. Count was 1.
                 Assert.Equal(0, node.Values("/b/text()").Count);
@@ -454,7 +453,7 @@ namespace Test.Yaapii.Xml
             IXML doc =
                 new XMLCursor(
                     "<root><item1><subitem1/></item1><item2/><item3/></root>");
-            
+
             Assert.Equal(
                 "subitem1",
                 doc.Nodes("/root/item1")[0].Nodes("./subitem1")[0].Values("name()")[0]

@@ -21,10 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 using Xunit;
-using Yaapii.Asserts.Xml;
 using Yaapii.Atoms.IO;
 using Yaapii.Atoms.Map;
 using Yaapii.Atoms.Text;
@@ -38,7 +36,7 @@ namespace Yaapii.Xml.Test
         [InlineData("<a></a>", "/done")]
         public void MakesXslTransformations(string input, string expected)
         {
-            IXSL xsl = 
+            IXSL xsl =
                 new XSLEnvelopeImplementation(
                     new TextOf(
                         new ResourceOf(
@@ -50,15 +48,18 @@ namespace Yaapii.Xml.Test
                     new MapOf<string, object>()
                 );
 
-            AssertXml.HasNode(
-                xsl.Transformed(new XMLQuery(input)),
-                expected);
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor(input)
+                ).Nodes(expected).Count
+            );
         }
 
         [Fact]
         public void TransformsToText()
         {
-            IXSL xsl = 
+            IXSL xsl =
                 new XSLEnvelopeImplementation(
                     new TextOf(
                         new ResourceOf(
@@ -73,7 +74,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "hello",
                 xsl.TransformedToText(
-                    new XMLQuery("<something/>")
+                    new XMLCursor("<something/>")
                 )
             );
         }
@@ -81,7 +82,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void TransformsToTextWithParams()
         {
-            IXSL xsl = 
+            IXSL xsl =
                 new XSLEnvelopeImplementation(
                     new TextOf(
                         new ResourceOf(
@@ -98,7 +99,7 @@ namespace Yaapii.Xml.Test
                 xsl
                 .With("boom", "Donny")
                 .TransformedToText(
-                    new XMLQuery("<ehe/>")
+                    new XMLCursor("<ehe/>")
                 )
             );
         }
@@ -106,7 +107,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void TransformsToTextWithIntegerParams()
         {
-            IXSL xsl = 
+            IXSL xsl =
                 new XSLEnvelopeImplementation(
                     new TextOf(
                         new ResourceOf(
@@ -123,7 +124,7 @@ namespace Yaapii.Xml.Test
                 xsl
                 .With("faa", 1)
                 .TransformedToText(
-                    new XMLQuery("<r0/>")
+                    new XMLCursor("<r0/>")
                 )
             );
         }
@@ -131,7 +132,7 @@ namespace Yaapii.Xml.Test
         [Fact]
         public void ReturnsSource()
         {
-            var xsl = new XSLEnvelopeRealization(
+            var xsl = new XSLEnvelopeImplementation(
                 new TextOf(
                     new ResourceOf(
                         "Resources/first.xsl",
@@ -168,13 +169,13 @@ namespace Yaapii.Xml.Test
                     )
                 );
 
-            AssertXml.HasNode(
+            Assert.Equal(
+                1,
                 xsl.Transformed(
-                    new XMLQuery(
+                    new XMLCursor(
                         "<simple-test/>"
                     )
-                ),
-                "/result[.=6]"
+                ).Nodes("/result[.=6]").Count
             );
         }
 
@@ -195,7 +196,7 @@ namespace Yaapii.Xml.Test
 
             Assert.Throws<ArgumentException>(() =>
                 xsl.Transformed(
-                    new XMLQuery(
+                    new XMLCursor(
                         "<simple-test/>"
                     )
                 )

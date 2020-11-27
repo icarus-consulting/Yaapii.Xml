@@ -21,7 +21,7 @@ namespace Yaapii.Xml
         /// <param name="files"></param>
         /// <param name="action"></param>
         public TidyFileList(IDictionary<string, string> files, Action action) : this(
-            new StickyScalar<string>(() =>
+            new ScalarOf<string>(() =>
                 Path.Combine(Directory.GetCurrentDirectory(), "TmpFileList")),
             files,
             action)
