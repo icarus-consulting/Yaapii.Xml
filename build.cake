@@ -15,7 +15,7 @@ var configuration   = "Release";
 // this is relative to the project root folder
 var buildArtifacts                  = Directory("./artifacts");
 var deployment                      = Directory("./artifacts/deployment");
-var version                         = "99.0.0";
+var version                         = "1.0.0";
 
 ///////////////////////////////////////////////////////////////////////////////
 // MODULES
@@ -60,21 +60,6 @@ Task("Version")
     
     version = BuildSystem.AppVeyor.Environment.Repository.Tag.Name;
     Information($"Set version to '{version}'");
-});
-
-///////////////////////////////////////////////////////////////////////////////
-// Appveyor Build
-///////////////////////////////////////////////////////////////////////////////
-Task("AppveyorBuild")
-.WithCriteria(() => isAppVeyor)
-.IsDependentOn("Version")
-.Does(() =>
-{
-    Information(Figlet("AppveyorBuild"));
-    
-    var appVeyorBuild = new AppVeyorBuild();
-    appVeyorBuild.Version = $"{version}.{appVeyorBuild.BuildNumber}";
-    Information($"{version}.{appVeyorBuild.BuildNumber}");
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -340,7 +325,6 @@ Task("NuGetFeed")
 ///////////////////////////////////////////////////////////////////////////////
 Task("Default")
 .IsDependentOn("Version")
-.IsDependentOn("AppveyorBuild")
 .IsDependentOn("Clean")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
