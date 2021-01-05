@@ -1,39 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Platforms>AnyCPU;x64</Platforms>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
-    <PackageLicenseUrl>https://github.com/icarus-consulting/Yaapii.Xml/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageId>Yaapii.Xml</PackageId>
-    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml</RepositoryUrl>
-    <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
-    <Authors>ICARUS Consulting GmbH</Authors>
-    <Company>ICARUS Consulting GmbH</Company>
-  </PropertyGroup>
-
-  <!-- this configuration is used by generate-opencover task -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCpu'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <PlatformTarget>x64</PlatformTarget>
-    <Description>Simple parsing, printing, and transforming of XML documents and nodes</Description>
-    <NeutralLanguage>en-001</NeutralLanguage>
-    <PackageTags>xml,xsl, xslt</PackageTags>
-    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
-    <DocumentationFile>artifacts\Yaapii.Xml.xml</DocumentationFile>
-    <Authors>ICARUS Consulting GmbH</Authors>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\Yaapii.Xml.xml</DocumentationFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>ICARUS Consulting GmbH</Authors>
+    <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Copyright>Copyright (c) 2020 ICARUS Consulting GmbH</Copyright>
+    <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
+    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/icarus-consulting/Yaapii.Xml/releases</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'ReleaseSources'">
+    <Content Include="Assets\_._">
+      <PackagePath>lib\netstandard2.0\</PackagePath>
+    </Content>
+    <Content Include="Assets\_._">
+      <PackagePath>lib\net461\</PackagePath>
+    </Content>
+    <Content Include="**\*.cs" Exclude="obj\**\*.*">
+      <BuildAction>Compile</BuildAction>
+      <PackagePath>content\LIBS\$(AssemblyName)\;contentFiles\cs\netstandard2.0\LIBS\$(AssemblyName)\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\LICENSE.txt">
+      <PackagePath></PackagePath>
+      <Visible>false</Visible>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\_._" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Assets\example-schema.xsd" />
@@ -48,8 +55,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="2.0.2" />
-    <PackageReference Include="Yaapii.Xambly" Version="1.0.0" />
+    <PackageReference Include="Yaapii.Atoms" Version="2.0.2" Condition="'$(Configuration)' != 'ReleaseSources'" />
+    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.0.2" Condition="'$(Configuration)' == 'ReleaseSources'">
+      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Yaapii.Xambly" Version="1.0.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
+    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.0.0" Condition="'$(Configuration)' == 'ReleaseSources'">
+      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

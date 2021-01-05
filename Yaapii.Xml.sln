@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{758D0E
 		build.cake = build.cake
 		build.ps1 = build.ps1
 		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
-		LICENSE = LICENSE
+		LICENSE.txt = LICENSE.txt
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
 	EndProjectSection
@@ -27,27 +27,17 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|x64.ActiveCfg = Debug|x64
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Debug|x64.Build.0 = Debug|x64
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|x64.ActiveCfg = Release|Any CPU
-		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|x64.Build.0 = Release|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B387941-7000-4539-AD4A-FA19B1D0B8D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Debug|x64.Build.0 = Debug|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|x64.ActiveCfg = Release|Any CPU
-		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|x64.Build.0 = Release|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C2DF07-0F5A-4309-A39A-8FF7D483348D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
