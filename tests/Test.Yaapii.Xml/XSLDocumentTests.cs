@@ -20,10 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Xunit;
 using Yaapii.Atoms.IO;
-using Yaapii.Xml;
+using Yaapii.Atoms.Map;
+using Yaapii.Atoms.Text;
 
 namespace Yaapii.Xml.Test
 {
@@ -44,21 +48,109 @@ namespace Yaapii.Xml.Test
                 );
 
             Assert.Equal(
-                1, 
+                1,
                 xsl.Transformed(new XMLCursor(xml)).Nodes("/done").Count
             );
         }
 
         [Fact]
-        public void TransformsWithImports()
+        public void TakesUri()
+        {
+            new TidyFileList(
+                Path.Combine(Directory.GetCurrentDirectory(), "Test"),
+                new MapOf(
+                    new KeyValuePair<string, string>(
+                        "demo.xsl",
+                        new TextOf(
+                            new ResourceOf(
+                                "Resources/CreatesDone.xsl",
+                                Assembly.GetExecutingAssembly()
+                            )
+                        ).AsString()
+                    )
+                ),
+                () =>
+                {
+                    IXSL xsl =
+                        new XSLDocument(
+                            new Uri("file://" + Path.Combine(Directory.GetCurrentDirectory(), "Test/demo.xsl"))
+                        );
+
+                    Assert.Equal(
+                        1,
+                        xsl.Transformed(
+                            new XMLCursor("<a/>")
+                        ).Nodes("/done").Count
+                    );
+                }
+            ).Invoke();
+        }
+
+        [Fact]
+        public void TakesUriAndResolver()
+        {
+            new TidyFileList(
+                Path.Combine(Directory.GetCurrentDirectory(), "Test"),
+                new MapOf(
+                    new KeyValuePair<string, string>(
+                        "first.xsl",
+                        new TextOf(
+                            new ResourceOf(
+                                "Resources/first.xsl",
+                                Assembly.GetExecutingAssembly()
+                            )
+                        ).AsString()
+                    )
+                ),
+                () =>
+                {
+                    IXSL xsl =
+                        new XSLDocument(
+                            new Uri("file://" + Path.Combine(Directory.GetCurrentDirectory(), "Test/first.xsl")),
+                            new SourcesEmbedded(
+                                Assembly.GetExecutingAssembly(),
+                                "Resources"
+                            )
+                        );
+
+                    Assert.Equal(
+                        1,
+                        xsl.Transformed(
+                            new XMLCursor("<simple-test/>")
+                        ).Nodes("/result[.=6]").Count
+                    );
+                }
+            ).Invoke();
+        }
+
+        [Fact]
+        public void TakesIInput()
+        {
+            var xsl =
+                new XSLDocument(
+                    new ResourceOf(
+                        "Resources/CreatesDone.xsl",
+                        Assembly.GetExecutingAssembly()
+                    )
+                );
+
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<a/>")
+                ).Nodes("/done").Count
+            );
+        }
+
+        [Fact]
+        public void TakesIInputAndResolver()
         {
             IXSL xsl =
                 new XSLDocument(
                     new ResourceOf(
                         "Resources/first.xsl",
                         Assembly.GetExecutingAssembly()
-                    )
-                ).With(
+                    ),
                     new SourcesEmbedded(
                         Assembly.GetExecutingAssembly(),
                         "Resources"
@@ -75,60 +167,104 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void TransformsToText()
+        public void TakesString()
         {
             IXSL xsl =
                 new XSLDocument(
-                    @"<xsl:stylesheet 
-                        xmlns:xsl='http://www.w3.org/1999/XSL/Transform'  
-                        version='2.0'><xsl:output method='text'/>
-                    <xsl:template match='/'>hello</xsl:template></xsl:stylesheet>"
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/CreatesDone.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ).AsString()
                 );
+
             Assert.Equal(
-                "hello",
-                xsl.TransformedToText(
-                    new XMLCursor("<something/>")
-                )
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<a/>")
+                ).Nodes("/done").Count
             );
         }
 
         [Fact]
-        public void TransformsToTextWithParams()
+        public void TakesStringAndResolver()
         {
             IXSL xsl =
                 new XSLDocument(
-                    @"<xsl:stylesheet   
-                     xmlns:xsl='http://www.w3.org/1999/XSL/Transform'    
-                     xmlns:xs='http://www.w3.org/2001/XMLSchema'
-                     version='2.0'><xsl:output method='text'  />
-                    <xsl:param name='boom' />
-                    <xsl:template match='/'>[<xsl:value-of select='$boom'/>]</xsl:template>   </xsl:stylesheet>"
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/first.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ).AsString(),
+                    new SourcesEmbedded(
+                        Assembly.GetExecutingAssembly(),
+                        "Resources"
+                    )
                 );
+
             Assert.Equal(
-                "[Donny]",
-                xsl
-                    .With("boom", "Donny")
-                    .TransformedToText(new XMLCursor("<ehe/>"))
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result[.=6]").Count
             );
         }
 
         [Fact]
-        public void TransformsToTextWithIntegerParams()
+        public void TakesStringAndResolverAndDictionary()
         {
             IXSL xsl =
                 new XSLDocument(
-                    @"<xsl:stylesheet     
-                     xmlns:xsl='http://www.w3.org/1999/XSL/Transform'       
-                     version='2.0'><xsl:output method='text'    />
-                    <xsl:param name='faa' as='xs:integer' select='5'/>
-                    <xsl:template match='/'>+<xsl:value-of select='$faa'/>+</xsl:template>   
-                    </xsl:stylesheet>  "
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/firstWithParam.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ).AsString(),
+                    new SourcesEmbedded(
+                        Assembly.GetExecutingAssembly(),
+                        "Resources"
+                    ),
+                    new MapOf<object>(
+                        new KeyValuePair<string, object>("faa", 9)
+                    )
                 );
+
             Assert.Equal(
-                "+1+",
-                xsl
-                    .With("faa", 1)
-                    .TransformedToText(new XMLCursor("<r0/>"))
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result/number[text() = 9]").Count
+            );
+        }
+
+        [Fact]
+        public void TakesITextResolverAndDictionary()
+        {
+            IXSL xsl =
+                new XSLDocument(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/firstWithParam.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmbedded(
+                        Assembly.GetExecutingAssembly(),
+                        "Resources"
+                    ),
+                    new MapOf<object>(
+                        new KeyValuePair<string, object>("faa", 9)
+                    )
+                );
+
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor("<simple-test/>")
+                ).Nodes("/result/number[text() = 9]").Count
             );
         }
     }

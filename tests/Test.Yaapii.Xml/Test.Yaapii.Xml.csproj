@@ -8,15 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\CreatesDone.xsl" />
+    <None Remove="Resources\CreatesHello.xsl" />
     <None Remove="Resources\first.xsl" />
+    <None Remove="Resources\firstWithParam.xsl" />
     <None Remove="Resources\second.xsl" />
     <None Remove="Resources\simple.xml" />
+    <None Remove="Resources\ValueOfBoom.xsl" />
+    <None Remove="Resources\ValueOfFaa.xsl" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\CreatesDone.xsl" />
+    <EmbeddedResource Include="Resources\CreatesHello.xsl" />
     <EmbeddedResource Include="Resources\first.xsl" />
+    <EmbeddedResource Include="Resources\firstWithParam.xsl" />
     <EmbeddedResource Include="Resources\second.xsl" />
     <EmbeddedResource Include="Resources\simple.xml" />
+    <EmbeddedResource Include="Resources\ValueOfBoom.xsl" />
+    <EmbeddedResource Include="Resources\ValueOfFaa.xsl" />
   </ItemGroup>
 
   <ItemGroup>

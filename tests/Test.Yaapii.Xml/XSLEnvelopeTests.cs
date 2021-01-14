@@ -21,34 +21,126 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 using Xunit;
 using Yaapii.Atoms.IO;
+using Yaapii.Atoms.Map;
 using Yaapii.Atoms.Text;
 
 namespace Yaapii.Xml.Test
 {
     public sealed class XSLEnvelopeTests
     {
+        [Theory]
+        [InlineData("<a/>", "/done")]
+        [InlineData("<a></a>", "/done")]
+        public void MakesXslTransformations(string input, string expected)
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/CreatesDone.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+                );
+
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor(input)
+                ).Nodes(expected).Count
+            );
+        }
+
+        [Fact]
+        public void TransformsToText()
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/CreatesHello.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+            );
+
+            Assert.Equal(
+                "hello",
+                xsl.TransformedToText(
+                    new XMLCursor("<something/>")
+                )
+            );
+        }
+
+        [Fact]
+        public void TransformsToTextWithParams()
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/ValueOfBoom.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+            );
+
+            Assert.Equal(
+                "[Donny]",
+                xsl
+                .With("boom", "Donny")
+                .TransformedToText(
+                    new XMLCursor("<ehe/>")
+                )
+            );
+        }
+
+        [Fact]
+        public void TransformsToTextWithIntegerParams()
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/ValueOfFaa.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+            );
+
+            Assert.Equal(
+                "+1+",
+                xsl
+                .With("faa", 1)
+                .TransformedToText(
+                    new XMLCursor("<r0/>")
+                )
+            );
+        }
+
         [Fact]
         public void ReturnsSource()
         {
-            var xsl = new XSLEnvelopeRealization(
+            var xsl = new XSLEnvelopeImplementation(
                 new TextOf(
-                    new InputOf(
-                        new SourcesEmbedded(
-                            this.GetType(),
-                            "Resources"
-                        ).GetEntity(
-                            new Uri("A:/first.xsl"),    // only the filename is relevant
-                            string.Empty,               // not evaluated
-                            typeof(object)              // not evaluated
-                        ) as Stream
+                    new ResourceOf(
+                        "Resources/first.xsl",
+                        Assembly.GetExecutingAssembly()
                     )
                 ),
                 new SourcesEmpty(),
-                new Dictionary<String, Object>()
+                new MapOf<String, Object>()
             );
 
             Assert.Contains(
@@ -57,21 +149,58 @@ namespace Yaapii.Xml.Test
             );
         }
 
-        //[Fact]
-        //public void xxx()
-        //{
-        //    var xsl = new XSLEnvelopeRealization(
-        //        new TextOf("<root />"),
-        //        new SourcesEmpty(),
-        //        new Dictionary<String, Object>()
-        //    ).With("xslArgName", "xslArgValue");
+        [Fact]
+        public void TransformsWithImports()
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/first.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+                ).With(
+                    new SourcesEmbedded(
+                        Assembly.GetExecutingAssembly(),
+                        "Resources"
+                    )
+                );
 
-        //    var sxlDoc = new XSLDocument(xsl, new SourcesEmpty());
+            Assert.Equal(
+                1,
+                xsl.Transformed(
+                    new XMLCursor(
+                        "<simple-test/>"
+                    )
+                ).Nodes("/result[.=6]").Count
+            );
+        }
 
-        //    //Assert.Equal(
-        //    //    "xslArgValue",
-        //    //    xsl.
-        //    //);
-        //}
+        [Fact]
+        public void HandlesXsltExctption()
+        {
+            IXSL xsl =
+                new XSLEnvelopeImplementation(
+                    new TextOf(
+                        new ResourceOf(
+                            "Resources/first.xsl",
+                            Assembly.GetExecutingAssembly()
+                        )
+                    ),
+                    new SourcesEmpty(),
+                    new MapOf<string, object>()
+                );
+
+            Assert.Throws<ArgumentException>(() =>
+                xsl.Transformed(
+                    new XMLCursor(
+                        "<simple-test/>"
+                    )
+                )
+            );
+        }
     }
 }
