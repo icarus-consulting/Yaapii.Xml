@@ -54,12 +54,8 @@ namespace Yaapii.Xml
         private readonly XmlResolver sources;
 
         /// <summary>
-        /// 
+        /// Envelope for XSL.
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="sources"></param>
-        /// <param name="map"></param>
-        /// <param name="bse"></param>
         public XSLEnvelope(IText src, XmlResolver sources, IDictionary<string, object> map)
         {
             this.xsl = src;
