@@ -9,7 +9,7 @@
     <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Copyright>Copyright (c) 2020 ICARUS Consulting GmbH</Copyright>
     <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
     <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\LICENSE.txt">
+    <Content Include="..\..\LICENSE">
       <PackagePath></PackagePath>
       <Visible>false</Visible>
     </Content>
