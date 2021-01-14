@@ -10,7 +10,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Copyright>Copyright (c) 2020 ICARUS Consulting GmbH</Copyright>
+    <Copyright>Copyright (c) 2021 ICARUS Consulting GmbH</Copyright>
     <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
     <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
     <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml.git</RepositoryUrl>
