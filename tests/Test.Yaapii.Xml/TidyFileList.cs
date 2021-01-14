@@ -7,6 +7,11 @@ using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml
 {
+    /// <summary>
+    /// A tidy file list which will be created in a temp folder located in the current folder.
+    /// It invokes an action. 
+    /// Finaly the root directory and all files will be deleted.
+    /// </summary>
     public sealed class TidyFileList : IAction
     {
         private readonly IScalar<string> _root;
@@ -18,8 +23,7 @@ namespace Yaapii.Xml
         /// It invokes an action. 
         /// Finaly the root directory and all files will be deleted.
         /// </summary>
-        /// <param name="files"></param>
-        /// <param name="action"></param>
+        /// <param name="files">Files with key as relative path to the root directory and value as file content</param>
         public TidyFileList(IDictionary<string, string> files, Action action) : this(
             new ScalarOf<string>(() =>
                 Path.Combine(Directory.GetCurrentDirectory(), "TmpFileList")),
@@ -27,6 +31,13 @@ namespace Yaapii.Xml
             action)
         { }
 
+        /// <summary>
+        /// A tidy file list which will be created in a temp folder located in the current folder.
+        /// It invokes an action. 
+        /// Finaly the root directory and all files will be deleted.
+        /// </summary>
+        /// <param name="root">The root directory in where the files (and subfolders) will be created</param>
+        /// <param name="files">Files with key as relative path to the root directory and value as file content</param>
         public TidyFileList(string root, IDictionary<string, string> files, Action action) : this(
             new ScalarOf<string>(root),
             files,
@@ -39,7 +50,6 @@ namespace Yaapii.Xml
         /// </summary>
         /// <param name="root">The root directory in where the files (and subfolders) will be created</param>
         /// <param name="files">Files with key as relative path to the root directory and value as file content</param>
-        /// <param name="action"></param>
         public TidyFileList(IScalar<string> root, IDictionary<string, string> files, Action action)
         {
             this._root = root;
