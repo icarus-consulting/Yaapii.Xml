@@ -1,6 +1,14 @@
-# Yaapii.Xml
-
+[![EO principles respected here](https://www.elegantobjects.org/badge.svg)](http://www.elegantobjects.org)
 [![Build status](https://ci.appveyor.com/api/projects/status/3j30j800d7cympsd?svg=true)](https://ci.appveyor.com/project/icarus-consulting/yaapii-xml)
+
+## Repo Guidelines
+
+Mainly responsible for this repository is [p@z](https://github.com/pz1337).
+Please request a review in every single PR from him. 
+
+He will try to review the PRs within **1 week** and merge applied PRs within **2 weeks** with a new release. Main review day is monday.
+
+# Yaapii.Xml
 
 Useful classes for working with XML.
 
