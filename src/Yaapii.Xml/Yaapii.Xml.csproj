@@ -56,7 +56,7 @@
 
   <ItemGroup>
     <PackageReference Include="Yaapii.Atoms" Version="2.3.2" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.0.2" Condition="'$(Configuration)' == 'ReleaseSources'">
+    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.3.2" Condition="'$(Configuration)' == 'ReleaseSources'">
       <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Yaapii.Xambly" Version="1.0.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
