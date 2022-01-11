@@ -1,6 +1,6 @@
 ﻿// MIT License
 //
-// Copyright(c) 2019 ICARUS Consulting GmbH
+// Copyright(c) 2022 ICARUS Consulting GmbH
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,10 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
-using Yaapii.Atoms;
 using Yaapii.Atoms.IO;
 using Yaapii.Atoms.Text;
-using Yaapii.Xml;
 
 namespace Yaapii.Xml.Test
 {

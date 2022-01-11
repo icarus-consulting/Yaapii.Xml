@@ -1,14 +1,14 @@
 #------------------------------------------------------------#
 #     CI Build Configuration for master branch pre-release   #
 #------------------------------------------------------------#
-version: 1.0.0.{build}
+version: "{build}"
 image: Visual Studio 2019
 configuration: Release
 environment:
   GITHUB_TOKEN:
     secure: tvoyJ/iv8Y+9VaKvOFvxegvQFBNqPkhiwghS8lQDsrt7B/1MWU4e8uOHQzfTU580
   NUGET_TOKEN:
-    secure: P2AbVXF6ZhkWoNAFjmIhzMH3FEgJkFtXPozru7MTOWRn6HCRiq3Dz+TP36knnevg
+    secure: ZDvc2hL3H+4ubTi1cibTM+XeOJVXEzhuMCnDxOL8Hs2e9unfRUHrCwYC52IVjXjh
   CODECOV_TOKEN:
     secure: p2KPNbaK5X26DvnuDHzZxrt0xT9AoQdmoqVHlfpmLuNVkzeMjiPLQUxC42TfIxnQ
   APPVEYOR_TOKEN:
