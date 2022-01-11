@@ -10,7 +10,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright (c) 2021 ICARUS Consulting GmbH</Copyright>
+    <Copyright>Copyright (c) 2022 ICARUS Consulting GmbH</Copyright>
     <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
     <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
     <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml.git</RepositoryUrl>
@@ -55,12 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="2.3.2" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.3.2" Condition="'$(Configuration)' == 'ReleaseSources'">
+    <PackageReference Include="Yaapii.Atoms" Version="2.4.0" />
+    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.4.0" Condition="'$(Configuration)' == 'ReleaseSources'">
       <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Yaapii.Xambly" Version="1.0.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.0.0" Condition="'$(Configuration)' == 'ReleaseSources'">
+    <PackageReference Include="Yaapii.Xambly" Version="1.1.0" />
+    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.1.0" Condition="'$(Configuration)' == 'ReleaseSources'">
       <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
     </PackageReference>
   </ItemGroup>
