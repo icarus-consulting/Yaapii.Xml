@@ -427,6 +427,7 @@ Task("NuGetFeed")
         }
         else
         {
+            // pushes symbols package too (see https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg)
             NuGetPush(
                 package,
                 new NuGetPushSettings {
@@ -435,17 +436,6 @@ Task("NuGetFeed")
                 }
             );
         }
-    }
-    var symbols = GetFiles($"{buildArtifacts.Path}/*.snupkg");
-    foreach(var symbol in symbols)
-    {
-        NuGetPush(
-            symbol,
-            new NuGetPushSettings {
-                Source = nuGetSource,
-                ApiKey = nugetReleaseToken
-            }
-        );
     }
 });
 
