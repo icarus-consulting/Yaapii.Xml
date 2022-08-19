@@ -15,7 +15,7 @@ var configuration           = "Release";
 // this is relative to the project root folder
 var buildArtifacts          = Directory("./artifacts");
 var deployment              = Directory("./artifacts/deployment");
-var version                 = "1.0.0";
+var version                 = "1.1.1";
 
 ///////////////////////////////////////////////////////////////////////////////
 // MODULES
