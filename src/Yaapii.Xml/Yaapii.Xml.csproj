@@ -1,68 +1,68 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Configurations>Debug;Release</Configurations>
-    <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\Yaapii.Xml.xml</DocumentationFile>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Authors>ICARUS Consulting GmbH</Authors>
-    <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright (c) 2022 ICARUS Consulting GmbH</Copyright>
-    <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
-    <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>https://github.com/icarus-consulting/Yaapii.Xml/releases</PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <Configurations>Debug;Release</Configurations>
+        <DocumentationFile>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(TargetFramework)\Yaapii.Xml.xml</DocumentationFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <Authors>ICARUS Consulting GmbH</Authors>
+        <Description>Lightweight XML tools. Query xml documents with XPath. Apply xml transformations to XML documents.</Description>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <NeutralLanguage>en</NeutralLanguage>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Copyright>Copyright (c) 2022 ICARUS Consulting GmbH</Copyright>
+        <PackageTags>yaapii, xml, xpath, xsl, parser</PackageTags>
+        <PackageProjectUrl>https://github.com/icarus-consulting/Yaapii.Xml</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/icarus-consulting/Yaapii.Xml.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageReleaseNotes>https://github.com/icarus-consulting/Yaapii.Xml/releases</PackageReleaseNotes>
+    </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'ReleaseSources'">
-    <Content Include="Assets\_._">
-      <PackagePath>lib\netstandard2.0\</PackagePath>
-    </Content>
-    <Content Include="Assets\_._">
-      <PackagePath>lib\net461\</PackagePath>
-    </Content>
-    <Content Include="**\*.cs" Exclude="obj\**\*.*">
-      <BuildAction>Compile</BuildAction>
-      <PackagePath>content\LIBS\$(AssemblyName)\;contentFiles\cs\netstandard2.0\LIBS\$(AssemblyName)\</PackagePath>
-    </Content>
-  </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'ReleaseSources'">
+        <Content Include="Assets\_._">
+            <PackagePath>lib\netstandard2.0\</PackagePath>
+        </Content>
+        <Content Include="Assets\_._">
+            <PackagePath>lib\net461\</PackagePath>
+        </Content>
+        <Content Include="**\*.cs" Exclude="obj\**\*.*">
+            <BuildAction>Compile</BuildAction>
+            <PackagePath>content\LIBS\$(AssemblyName)\;contentFiles\cs\netstandard2.0\LIBS\$(AssemblyName)\</PackagePath>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\..\LICENSE">
-      <PackagePath></PackagePath>
-      <Visible>false</Visible>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\..\LICENSE">
+            <PackagePath></PackagePath>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\_._" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Assets\_._" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\example-schema.xsd" />
-    <None Remove="Assets\example.xml" />
-    <None Remove="Resources\strip.xsl" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Assets\example-schema.xsd" />
+        <None Remove="Assets\example.xml" />
+        <None Remove="Resources\strip.xsl" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\example-schema.xsd" />
-    <EmbeddedResource Include="Assets\example.xml" />
-    <EmbeddedResource Include="Resources\strip.xsl" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\example-schema.xsd" />
+        <EmbeddedResource Include="Assets\example.xml" />
+        <EmbeddedResource Include="Resources\strip.xsl" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="2.6.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Atoms.Sources" Version="2.6.0" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Yaapii.Xambly" Version="1.2.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.2.0" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Yaapii.Atoms" Version="2.6.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
+        <PackageReference Include="Yaapii.Atoms.Sources" Version="2.6.0" Condition="'$(Configuration)' == 'ReleaseSources'">
+            <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Yaapii.Xambly" Version="1.2.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
+        <PackageReference Include="Yaapii.Xambly.Sources" Version="1.2.0" Condition="'$(Configuration)' == 'ReleaseSources'">
+            <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>
