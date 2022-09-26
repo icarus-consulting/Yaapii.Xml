@@ -8,7 +8,7 @@ environment:
   GITHUB_TOKEN:
     secure: GQsGsvPcJyxETZAKlYPbAz7WnNZvoBNdtRHXuez7Qp1By7QchpP2hjT1u0wmFOig
   NUGET_TOKEN:
-    secure: ZDvc2hL3H+4ubTi1cibTM+XeOJVXEzhuMCnDxOL8Hs2e9unfRUHrCwYC52IVjXjh
+    secure: 7BiuqzrHnmb8PAvTPuvyQkA7PhLFBSmBH+lof9tX9SM1DVFSQZAG6dTbVXEA+pkD
   CODECOV_TOKEN:
     secure: p2KPNbaK5X26DvnuDHzZxrt0xT9AoQdmoqVHlfpmLuNVkzeMjiPLQUxC42TfIxnQ
   APPVEYOR_TOKEN:
