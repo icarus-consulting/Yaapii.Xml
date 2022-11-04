@@ -59,8 +59,8 @@
     <PackageReference Include="Yaapii.Atoms.Sources" Version="2.6.0" Condition="'$(Configuration)' == 'ReleaseSources'">
       <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Yaapii.Xambly" Version="1.2.0" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.2.0" Condition="'$(Configuration)' == 'ReleaseSources'">
+    <PackageReference Include="Yaapii.Xambly" Version="1.2.1" Condition="'$(Configuration)' != 'ReleaseSources'" />
+    <PackageReference Include="Yaapii.Xambly.Sources" Version="1.2.1" Condition="'$(Configuration)' == 'ReleaseSources'">
       <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
     </PackageReference>
   </ItemGroup>
