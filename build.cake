@@ -15,7 +15,7 @@ var configuration           = "Release";
 // this is relative to the project root folder
 var buildArtifacts          = Directory("./artifacts");
 var deployment              = Directory("./artifacts/deployment");
-var version                 = "1.0.0";
+var version                 = "1.1.1";
 
 ///////////////////////////////////////////////////////////////////////////////
 // MODULES
@@ -290,13 +290,14 @@ Task("NuGet")
 .Does(() =>
 {
     Information(Figlet("NuGet"));
+    Information($"Building NuGet Package for Version {version}");
     
     var settings = new DotNetCorePackSettings()
     {
         Configuration = configuration,
         OutputDirectory = buildArtifacts,
-        NoRestore = true,
-        NoBuild = true,
+        NoRestore = false,
+        NoBuild = false,       
         VersionSuffix = ""
     };
     settings.ArgumentCustomization = args => args.Append("--include-symbols").Append("-p:SymbolPackageFormat=snupkg");
@@ -305,7 +306,7 @@ Task("NuGet")
     var settingsSources = new DotNetCorePackSettings()
     {
         Configuration = "ReleaseSources",
-        OutputDirectory = buildArtifacts,
+        OutputDirectory = buildArtifacts, 
         NoRestore = false,
         NoBuild = false,
         VersionSuffix = ""
