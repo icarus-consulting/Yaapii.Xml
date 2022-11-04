@@ -387,7 +387,7 @@ Task("GitHubRelease")
             Milestone         = version,
             Name              = version,
             Prerelease        = false,
-            TargetCommitish   = "master"
+            TargetCommitish   = "main"
         }
     );
     var nugets = string.Join(",", GetFiles("./artifacts/*.*nupkg").Select(f => f.FullPath) );
