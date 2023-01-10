@@ -19,5 +19,5 @@ skip_branch_with_pr: true
 nuget:
   account_feed: true
 build_script:
-- ps: .\build.ps1
+- ps: (& cmd /c); [console]::OutputEncoding = New-Object System.Text.UTF8Encoding; & .\build.ps1
 test: off
