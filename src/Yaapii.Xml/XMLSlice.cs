@@ -39,6 +39,7 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XMLSlice : IXML
     {
+        private readonly IScalar<IXmlNamespaceResolver> context;
         private readonly XMLCursor cursor;
 
         /// <summary> 
@@ -159,6 +160,7 @@ namespace Yaapii.Xml
 
         public XMLSlice(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context)
         {
+            this.context = context;
             this.cursor = new XMLCursor(node, context);
         }
 
@@ -183,7 +185,15 @@ namespace Yaapii.Xml
 
         public IXML WithNamespace(string prefix, object uri)
         {
-            return new XMLSlice(this.cursor.WithNamespace(prefix, uri).AsNode());
+            return
+                new XMLSlice(
+                    this.cursor.AsNode(),
+                    new XPathContext(
+                        this.context.Value().GetNamespacesInScope(XmlNamespaceScope.All),
+                        prefix,
+                        uri.ToString()
+                    )
+                );
         }
     }
 }
