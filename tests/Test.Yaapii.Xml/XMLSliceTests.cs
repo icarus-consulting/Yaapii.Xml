@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
+using Yaapii.Atoms.IO;
 
 namespace Yaapii.Xml.Test
 {
@@ -103,6 +104,20 @@ namespace Yaapii.Xml.Test
                     ).Values("/root/text()")[0]
                 );
             }
+        }
+
+        [Fact]
+        public void WorksWithNamespace()
+        {
+            Assert.Equal(
+                "Docs",
+                new XMLText(
+                    new XMLSlice(
+                        new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                    ).WithNamespace("n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"),
+                    "/n0:Uos/Header/Documentation/text()"
+                ).AsString()
+            );
         }
     }
 }
