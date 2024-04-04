@@ -39,9 +39,9 @@ namespace Yaapii.Xml
     /// </summary>
     public sealed class XMLSlice : IXML
     {
-        private readonly IScalar<IXmlNamespaceResolver> context;
         private readonly XMLCursor cursor;
-
+        private readonly IScalar<IXmlNamespaceResolver> context;
+        
         /// <summary> 
         /// XMLCursor from Xambly Directives. 
         /// </summary>
@@ -160,8 +160,8 @@ namespace Yaapii.Xml
 
         public XMLSlice(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context)
         {
-            this.context = context;
             this.cursor = new XMLCursor(node, context);
+            this.context = context;
         }
 
         public XNode AsNode()
