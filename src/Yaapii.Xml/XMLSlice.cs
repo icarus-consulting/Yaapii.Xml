@@ -194,6 +194,9 @@ namespace Yaapii.Xml
             this.context = context;
         }
 
+        /// <summary>
+        /// Retrieve DOM node, represented by an XNode
+        /// </summary>
         public XNode AsNode()
         {
             return this.cursor.AsNode();
