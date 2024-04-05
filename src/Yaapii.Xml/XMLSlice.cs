@@ -41,18 +41,18 @@ namespace Yaapii.Xml
     {
         private readonly XMLCursor cursor;
         private readonly IScalar<IXmlNamespaceResolver> context;
-        
-        /// <summary> 
-        /// XMLCursor from Xambly Directives. 
+
+        //// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
         /// </summary>
-        /// <param name="patch">Xambly patch</param>
         public XMLSlice(IEnumerable<IDirective> patch) : this(
             new Xambler(patch)
         )
         { }
 
-        /// <summary> XMLCursor from a Xambler. </summary>
-        /// <param name="xambler"> Xambler to make Xml from </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(Xambler xambler) : this(
             new TextOf(
                 new ScalarOf<string>(() => xambler.Xml())
@@ -60,21 +60,27 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from a XNode. </summary>
-        /// <param name="node"> XNode to make XML from </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(XNode node) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(new XPathContext())
         )
         { }
 
-        /// <summary> XMLCursor from a stream. </summary>
-        /// <param name="stream"> stream with xml text </param>
-        public XMLSlice(Stream stream) : this(stream, Encoding.Default)
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
+        public XMLSlice(Stream stream) : this(
+            stream,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from a stream. </summary>
-        /// <param name="stream"> stream with xml text </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(Stream stream, Encoding encoding) : this(
             new TextOf(
                 new InputOf(stream),
@@ -83,49 +89,70 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from a url. </summary>
-        /// <param name="url"> url to get xml text from </param>
-        public XMLSlice(Url url) : this(url, Encoding.Default)
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
+        public XMLSlice(Url url) : this(
+            url,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from a url. </summary>
-        /// <param name="url"> url to get xml text from </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(Url url, Encoding encoding) : this(
-            new InputOf(url), encoding)
+            new InputOf(url),
+            encoding
+        )
         { }
 
-        /// <summary> XMLCursor from a file. </summary>
-        /// <param name="file"> file to get xml text from </param>
-        public XMLSlice(Uri file) : this(file, Encoding.Default)
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
+        public XMLSlice(Uri file) : this(
+            file,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from a file. </summary>
-        /// <param name="file"> file to get xml text from </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(Uri file, Encoding encoding) : this(
             new InputOf(file),
             encoding
         )
         { }
 
-        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
-        /// <param name="input"> XNode to make XML from </param>
-        public XMLSlice(IInput input) : this(input, Encoding.Default)
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
+        public XMLSlice(IInput input) : this(
+            input,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
-        /// <param name="input"> XNode to make XML from </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(IInput input, Encoding encoding) : this(
-            new TextOf(input, encoding))
+            new TextOf(input, encoding)
+        )
         { }
 
-        /// <summary> XMLCursor from a string. </summary>
-        /// <param name="text"> xml as string </param>
-        public XMLSlice(String text) : this(
-            new TextOf(text))
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
+        public XMLSlice(string text) : this(
+            new TextOf(text)
+        )
         { }
 
-        /// <summary> XMLCursor from <see cref="IText"/> </summary>
-        /// <param name="text"> xml as text </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(IText text) : this(
             new ScalarOf<XNode>(() =>
             {
@@ -137,7 +164,8 @@ namespace Yaapii.Xml
                 {
                     throw
                         new XmlException(
-                            new Formatted("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
+                            $"Cannot parse xml: {ex.Message}{Environment.NewLine}" +
+                            $"XML Content: '{text.AsString()}'",
                             ex
                         );
                 }
@@ -148,16 +176,18 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from node and context</summary>
-        /// <param name="node"> xml as XNode </param>
-        /// <param name="context"> context information about namespaces in the xml </param>
-        /// <param name="leaf"> is it a document or a node </param>
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(XNode node, IXmlNamespaceResolver context) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(context)
         )
         { }
 
+        /// <summary>
+        /// A XML which will slice when you call Nodes(xpath).
+        /// </summary>
         public XMLSlice(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context)
         {
             this.cursor = new XMLCursor(node, context);
@@ -169,6 +199,11 @@ namespace Yaapii.Xml
             return this.cursor.AsNode();
         }
 
+        /// <summary>
+        /// Retrieve DOM nodes from the XML response that has been sliced.
+        /// <para>An <see cref="ArgumentException"/> is thrown if the parameter
+        /// passed is not a valid XPath expression.</para>
+        /// </summary>
         public IList<IXML> Nodes(string xpath)
         {
             return
@@ -181,11 +216,48 @@ namespace Yaapii.Xml
                 );
         }
 
+        /// <summary>
+        /// Find and return text elements or attributes matched by XPath address.
+        ///
+        /// <para>The XPath query should point to text elements or attributes in the
+        /// XML document. If any nodes of different types (elements, comments, etc.)
+        /// are found in result node list -
+        /// a <see cref="Exception"/> will be thrown.
+        /// </para>
+        /// <para>Alternatively, the XPath query can be a function or expression that
+        /// returns a single value instead of pointing to a set of nodes. In this
+        /// case, the result will be a List containing a single String, the content
+        /// of which is the result of the evaluation. If the expression result is not
+        /// a String, it will be converted to a String representation and returned as
+        /// such. For example, a document containing three &lt;a&gt; elements,
+        /// the input query "count(//a)", will return a singleton List with a single
+        /// string value "3".
+        /// </para>
+        /// </summary>
         public IList<string> Values(string xpath)
         {
             return this.cursor.Values(xpath);
         }
 
+        /// <summary>
+        /// Register additional namespace prefix for XPath.
+        /// <para>For example:
+        /// <code>
+        /// String name = new XMLCursor("...") / new XMLSlice("...")
+        ///   .WithNamespace("ns1", "http://example.com")
+        ///   .WithNamespace("foo", "http://example.com/foo")
+        ///   .Xpath("/ns1:root/foo:name/text()")
+        ///   .Item(0);
+        /// </code>
+        /// </para>
+        /// <para>A number of standard namespaces are registered by default in
+        /// instances of XML. Their
+        /// full list is in {@link XMLDocument#XMLDocument(String)}.
+        /// </para>
+        /// <para>If a namespace prefix is already registered an
+        /// <see cref="ArgumentException"/> will be thrown.
+        /// </para>
+        /// </summary>
         public IXML WithNamespace(string prefix, object uri)
         {
             return

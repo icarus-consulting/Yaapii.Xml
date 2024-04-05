@@ -48,16 +48,16 @@ namespace Yaapii.Xml
         private readonly Func<XNode, string> stringTransform;
 
         /// <summary> 
-        /// XMLCursor from Xambly Directives. 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
-        /// <param name="patch">Xambly patch</param>
         public XMLCursor(IEnumerable<IDirective> patch) : this(
             new Xambler(patch)
         )
         { }
 
-        /// <summary> XMLCursor from a Xambler. </summary>
-        /// <param name="xambler"> Xambler to make Xml from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(Xambler xambler) : this(
             new TextOf(
                 new ScalarOf<string>(() => xambler.Xml())
@@ -65,21 +65,27 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from a XNode. </summary>
-        /// <param name="node"> XNode to make XML from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(XNode node) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(new XPathContext())
         )
         { }
 
-        /// <summary> XMLCursor from a stream. </summary>
-        /// <param name="stream"> stream with xml text </param>
-        public XMLCursor(Stream stream) : this(stream, Encoding.Default)
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
+        public XMLCursor(Stream stream) : this(
+            stream,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from a stream. </summary>
-        /// <param name="stream"> stream with xml text </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(Stream stream, Encoding encoding) : this(
             new TextOf(
                 new InputOf(stream),
@@ -88,52 +94,68 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from a url. </summary>
-        /// <param name="url"> url to get xml text from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(Url url) : this(
             new InputOf(url))
         { }
 
-        /// <summary> XMLCursor from a url. </summary>
-        /// <param name="url"> url to get xml text from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(Url url, Encoding encoding) : this(
-            new InputOf(url), encoding
+            new InputOf(url),
+            encoding
         )
         { }
 
-        /// <summary> XMLCursor from a file. </summary>
-        /// <param name="file"> file to get xml text from </param>
-        public XMLCursor(Uri file) : this(file, Encoding.Default)
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
+        public XMLCursor(Uri file) : this(
+            file,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from a file. </summary>
-        /// <param name="file"> file to get xml text from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(Uri file, Encoding encoding) : this(
             new InputOf(file),
             encoding
         )
         { }
 
-        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
-        /// <param name="input"> XNode to make XML from </param>
-        public XMLCursor(IInput input) : this(input, Encoding.Default)
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
+        public XMLCursor(IInput input) : this(
+            input,
+            Encoding.Default
+        )
         { }
 
-        /// <summary> XMLCursor from <see cref="IInput"/>. </summary>
-        /// <param name="input"> XNode to make XML from </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(IInput input, Encoding encoding) : this(
             new TextOf(input, encoding)
         )
         { }
 
-        /// <summary> XMLCursor from a string. </summary>
-        /// <param name="text"> xml as string </param>
-        public XMLCursor(String text) : this(
-            new TextOf(text))
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
+        public XMLCursor(string text) : this(
+            new TextOf(text)
+        )
         { }
 
-        /// <summary> XMLCursor from <see cref="IText"/> </summary>
-        /// <param name="text"> xml as text </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(IText text) : this(
             new ScalarOf<XNode>(() =>
             {
@@ -145,7 +167,8 @@ namespace Yaapii.Xml
                 {
                     throw
                         new XmlException(
-                            new Formatted("Cannot parse xml: {0}\r\nXML Content: '{1}'", ex.Message, text.AsString()).AsString(),
+                            $"Cannot parse xml: {ex.Message}{Environment.NewLine}" +
+                            $"XML Content: '{text.AsString()}'",
                             ex
                         );
                 }
@@ -156,10 +179,9 @@ namespace Yaapii.Xml
         )
         { }
 
-        /// <summary> XMLCursor from node and context</summary>
-        /// <param name="node"> xml as XNode </param>
-        /// <param name="context"> context information about namespaces in the xml </param>
-        /// <param name="leaf"> is it a document or a node </param>
+        /// <summary> 
+        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// </summary>
         public XMLCursor(XNode node, IXmlNamespaceResolver context) : this(
             new ScalarOf<XNode>(node),
             new ScalarOf<IXmlNamespaceResolver>(context)
@@ -174,19 +196,18 @@ namespace Yaapii.Xml
                 XmlWriterSettings xws = new XmlWriterSettings();
                 xws.OmitXmlDeclaration = nd.NodeType != XmlNodeType.Document;
                 xws.Indent = false;
-                using (XmlWriter xw = XmlWriter.Create(sb, xws))
+                using (var xw = XmlWriter.Create(sb, xws))
                 {
                     nd.Document.WriteTo(xw);
                 }
                 return sb.ToString();
             };
-            this.xml = new ScalarOf<string>(
-                () =>
-                {
-                    return this.stringTransform.Invoke(node.Value());
-                });
-            this.cache = new ScalarOf<XNode>(node);
-            this.context = new ScalarOf<IXmlNamespaceResolver>(context);
+            this.xml =
+                ScalarOf.New(() =>
+                    this.stringTransform.Invoke(node.Value())
+                );
+            this.cache = ScalarOf.New(node);
+            this.context = ScalarOf.New(context);
         }
 
         /// <summary> The xml formatted as string. </summary>
@@ -197,21 +218,20 @@ namespace Yaapii.Xml
         }
 
         /// <summary> The xml as XNode. </summary>
-        /// <returns></returns>
         public XNode AsNode()
         {
             var casted = this.cache.Value();
-            XNode answer = null;
+            XNode answer;
 
             if (casted.NodeType == XmlNodeType.Document)
             {
-                answer = casted as XNode;
+                answer = casted;
             }
             else
             {
                 var doc = new XDocument();
                 doc.AddFirst(casted);
-                answer = doc.Root as XNode;
+                answer = doc.Root;
             }
             return answer;
         }
@@ -245,11 +265,7 @@ namespace Yaapii.Xml
             {
                 throw
                     new ArgumentException(
-                        new Formatted(
-                            "Invalid XPath expression '{0}': {1}",
-                            xpath,
-                            ex.Message
-                        ).AsString(),
+                        $"Invalid XPath expression '{xpath}': {ex.Message}",
                         ex
                     );
             }
@@ -366,7 +382,7 @@ namespace Yaapii.Xml
                         ex
                     );
             }
-            catch (System.InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 throw new InvalidOperationException("Could not perform xpath query. Did you try to read nodes instead of values (attributes) ? Use method .Values(string xpath).", ex);
             }
@@ -375,11 +391,9 @@ namespace Yaapii.Xml
         }
 
         /// <summary> Extracted value from XObject. </summary>
-        /// <param name="xObject"></param>
-        /// <returns></returns>
         private string ValueFrom(XObject xObject)
         {
-            string result = String.Empty;
+            string result;
 
             //Casting necessary, because LinQ-XML is designed like this by Microsoft
             if (xObject.NodeType == XmlNodeType.Attribute)
@@ -409,8 +423,6 @@ namespace Yaapii.Xml
         }
 
         /// <summary> Exact equality test, regarding whitespaces and blanks. </summary>
-        /// <param name="obj"> to compare to </param>
-        /// <returns> true if equal </returns>
         public override bool Equals(object obj)
         {
             if (!(obj is XMLCursor)) return false;
@@ -422,7 +434,6 @@ namespace Yaapii.Xml
         }
 
         /// <summary> Hashcode for this object. </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.xml.GetHashCode();
