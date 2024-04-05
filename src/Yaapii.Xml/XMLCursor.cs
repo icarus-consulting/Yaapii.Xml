@@ -230,11 +230,14 @@ namespace Yaapii.Xml
         {
             try
             {
-                var el = this.cache.Value().XPathSelectElements(xpath, this.context.Value());
+                var xpathResultingElements = this.cache.Value().XPathSelectElements(xpath, this.context.Value());
                 var mapped =
-                    new Mapped<XElement, IXML>(
-                        elem => new XMLCursor(elem),
-                        el
+                    new Mapped<XElement, IXML>(element =>
+                        new XMLCursor(
+                            element,
+                            this.context.Value()
+                        ),
+                        xpathResultingElements
                     );
                 return mapped;
             }
