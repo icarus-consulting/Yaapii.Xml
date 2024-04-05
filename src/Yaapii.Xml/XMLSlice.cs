@@ -172,8 +172,11 @@ namespace Yaapii.Xml
         public IList<IXML> Nodes(string xpath)
         {
             return
-                new Atoms.List.Mapped<IXML, IXML>(
-                    node => new XMLSlice(node.AsNode()),
+                new Atoms.List.Mapped<IXML, IXML>(node =>
+                    new XMLSlice(
+                        node.AsNode(),
+                        this.context.Value()
+                    ),
                     this.cursor.Nodes(xpath)
                 );
         }
