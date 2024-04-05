@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<n0:Uos xmlns:n0="http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model">
-  <Header xmlns="">
-    <Documentation>Docs</Documentation>
-  </Header>
-</n0:Uos>
+<n0:Root  xmlns:n0="http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model">
+  <n0:A>
+    <n0:B>Content</n0:B>
+  </n0:A>
+</n0:Root>
 
