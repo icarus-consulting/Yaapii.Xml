@@ -38,7 +38,7 @@ using Yaapii.Xambly;
 namespace Yaapii.Xml
 {
     /// <summary> 
-    /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+    /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
     /// </summary>
     public sealed class XMLCursor : IXML
     {
@@ -48,7 +48,7 @@ namespace Yaapii.Xml
         private readonly Func<XNode, string> stringTransform;
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(IEnumerable<IDirective> patch) : this(
             new Xambler(patch)
@@ -56,7 +56,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Xambler xambler) : this(
             new TextOf(
@@ -66,7 +66,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(XNode node) : this(
             new ScalarOf<XNode>(node),
@@ -75,7 +75,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Stream stream) : this(
             stream,
@@ -84,7 +84,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Stream stream, Encoding encoding) : this(
             new TextOf(
@@ -95,14 +95,14 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Url url) : this(
             new InputOf(url))
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Url url, Encoding encoding) : this(
             new InputOf(url),
@@ -111,7 +111,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Uri file) : this(
             file,
@@ -120,7 +120,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(Uri file, Encoding encoding) : this(
             new InputOf(file),
@@ -129,7 +129,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(IInput input) : this(
             input,
@@ -138,7 +138,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(IInput input, Encoding encoding) : this(
             new TextOf(input, encoding)
@@ -146,7 +146,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(string text) : this(
             new TextOf(text)
@@ -154,7 +154,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(IText text) : this(
             new ScalarOf<XNode>(() =>
@@ -180,7 +180,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary> 
-        /// A XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
+        /// An XML Cursor, which can be set to different nodes via XPath queries. Type is <see cref="IXML"/>.
         /// </summary>
         public XMLCursor(XNode node, IXmlNamespaceResolver context) : this(
             new ScalarOf<XNode>(node),
@@ -425,7 +425,8 @@ namespace Yaapii.Xml
         /// <summary> Exact equality test, regarding whitespaces and blanks. </summary>
         public override bool Equals(object obj)
         {
-            if (!(obj is XMLCursor)) return false;
+            if (!(obj is XMLCursor))
+                return false;
 
             var left = this.xml.Value().ToString();
             var right = (obj as XMLCursor).ToString();
