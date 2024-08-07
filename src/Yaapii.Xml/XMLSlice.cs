@@ -35,7 +35,7 @@ using Yaapii.Xambly;
 namespace Yaapii.Xml
 {
     /// <summary>
-    /// An xml object which will execute the slice operation once its method is invoked.
+    /// An Xml that will be sliced when you call Nodes(xpath).
     /// </summary>
     public sealed class XMLSlice : IXML
     {
@@ -43,7 +43,7 @@ namespace Yaapii.Xml
         private readonly IScalar<IXmlNamespaceResolver> context;
 
         //// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(IEnumerable<IDirective> patch) : this(
             new Xambler(patch)
@@ -51,7 +51,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Xambler xambler) : this(
             new TextOf(
@@ -61,7 +61,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(XNode node) : this(
             new ScalarOf<XNode>(node),
@@ -70,7 +70,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Stream stream) : this(
             stream,
@@ -79,7 +79,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Stream stream, Encoding encoding) : this(
             new TextOf(
@@ -90,7 +90,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Url url) : this(
             url,
@@ -99,7 +99,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Url url, Encoding encoding) : this(
             new InputOf(url),
@@ -108,7 +108,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Uri file) : this(
             file,
@@ -117,7 +117,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(Uri file, Encoding encoding) : this(
             new InputOf(file),
@@ -126,7 +126,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(IInput input) : this(
             input,
@@ -135,7 +135,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(IInput input, Encoding encoding) : this(
             new TextOf(input, encoding)
@@ -143,7 +143,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(string text) : this(
             new TextOf(text)
@@ -151,7 +151,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(IText text) : this(
             new ScalarOf<XNode>(() =>
@@ -177,7 +177,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(XNode node, IXmlNamespaceResolver context) : this(
             new ScalarOf<XNode>(node),
@@ -186,7 +186,7 @@ namespace Yaapii.Xml
         { }
 
         /// <summary>
-        /// An xml object which will execute the slice operation once its method is invoked.
+        /// An Xml that will be sliced when you call Nodes(xpath).
         /// </summary>
         public XMLSlice(IScalar<XNode> node, IScalar<IXmlNamespaceResolver> context)
         {
