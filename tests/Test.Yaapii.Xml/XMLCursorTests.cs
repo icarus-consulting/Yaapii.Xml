@@ -495,7 +495,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void NodesDeliversXMLThatKnowNamespace()
+        public void NodesDeliverXMLThatKnowNamespace()
         {
             var subNode =
                 FirstOf.New(
