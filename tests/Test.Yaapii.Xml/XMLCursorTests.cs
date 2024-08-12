@@ -462,7 +462,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void ValuesWorkWithNamespace()
+        public void ValuesMethodWorksWithNamespaceInXpath()
         {
             Assert.Equal(
                 "Content",
@@ -480,7 +480,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void NodesWorkWithNamespace()
+        public void NodesMethodWorksWithNamespaceInXpath()
         {
             Assert.Single(
                 new XMLCursor(
@@ -495,7 +495,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void NodesDeliverXMLThatKnowNamespace()
+        public void DeliversXMLThatKnowsNamespace()
         {
             var subNode =
                 FirstOf.New(

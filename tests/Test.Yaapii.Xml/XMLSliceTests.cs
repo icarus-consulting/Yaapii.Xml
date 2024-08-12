@@ -54,7 +54,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLSlice(
-                    new Yaapii.Atoms.IO.InputOf(inBytes),
+                    new InputOf(inBytes),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -73,7 +73,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLSlice(
-                    new Yaapii.Atoms.IO.InputOf(inBytes).Stream(),
+                    new InputOf(inBytes).Stream(),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -86,7 +86,7 @@ namespace Yaapii.Xml.Test
         [InlineData("UTF-32")]
         public void FileCtorAppliesEncoding(string name)
         {
-            using (var tmp = new Yaapii.Atoms.IO.TempDirectory())
+            using (var tmp = new TempDirectory())
             {
                 var encoding = Encoding.GetEncoding(name);
                 var inBytes = encoding.GetBytes("<root>Can I or can't I dö prüper äncöding</root>");
@@ -108,7 +108,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void ValuesWorkWithNamespace()
+        public void ValuesMethodWorksWithNamespaceInXpath()
         {
             Assert.Equal(
                 "Content",
@@ -126,7 +126,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void NodesWorkWithNamespace()
+        public void NodesMethodWorksWithNamespaceInXpath()
         {
             Assert.Single(
                 new XMLSlice(
@@ -141,7 +141,7 @@ namespace Yaapii.Xml.Test
         }
 
         [Fact]
-        public void NodesDeliverXMLThatKnowNamespace()
+        public void DeliversXMLThatKnowsNamespace()
         {
             var subNode =
                 FirstOf.New(
