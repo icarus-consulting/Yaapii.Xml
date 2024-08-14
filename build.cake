@@ -1,4 +1,3 @@
-#tool nuget:?package=GitReleaseManager&version=0.11
 #tool nuget:?package=OpenCover&version=4.7.922
 #tool nuget:?package=Codecov&version=1.12.3
 #addin nuget:?package=Cake.Figlet&version=1.3.1
@@ -46,7 +45,6 @@ var nuGetSource             = "https://api.nuget.org/v3/index.json";
 var appVeyorNuGetFeed       = "https://ci.appveyor.com/nuget/icarus/api/v2/package";
 
 // API key tokens for deployment
-var gitHubToken             = "";
 var nugetReleaseToken       = "";
 var appVeyorFeedToken       = "";
 var codeCovToken            = "";
@@ -344,11 +342,6 @@ Task("Credentials")
 {
     Information(Figlet("Credentials"));
     
-    gitHubToken = EnvironmentVariable("GITHUB_TOKEN");
-    if (string.IsNullOrEmpty(gitHubToken))
-    {
-        throw new Exception("Environment variable 'GITHUB_TOKEN' is not set");
-    }
     nugetReleaseToken = EnvironmentVariable("NUGET_TOKEN");
     if (string.IsNullOrEmpty(nugetReleaseToken))
     {
@@ -364,42 +357,6 @@ Task("Credentials")
     {
         throw new Exception("Environment variable 'CODECOV_TOKEN' is not set");
     }
-});
-
-
-///////////////////////////////////////////////////////////////////////////////
-// GitHub Release
-///////////////////////////////////////////////////////////////////////////////
-Task("GitHubRelease")
-.WithCriteria(() => isAppVeyor && BuildSystem.AppVeyor.Environment.Repository.Tag.IsTag)
-.IsDependentOn("Version")
-.IsDependentOn("NuGet")
-.IsDependentOn("Credentials")
-.Does(() => 
-{
-    Information(Figlet("GitHub Release"));
-    
-    GitReleaseManagerCreate(
-        gitHubToken,
-        owner,
-        repository, 
-        new GitReleaseManagerCreateSettings {
-            Milestone         = version,
-            Name              = version,
-            Prerelease        = false,
-            TargetCommitish   = "main"
-        }
-    );
-    var nugets = string.Join(",", GetFiles("./artifacts/*.*nupkg").Select(f => f.FullPath) );
-    Information($"Release files:{Environment.NewLine}  " + nugets.Replace(",", $"{Environment.NewLine}  "));
-    GitReleaseManagerAddAssets(
-        gitHubToken,
-        owner,
-        repository,
-        version,
-        nugets
-    );
-    GitReleaseManagerPublish(gitHubToken, owner, repository, version);
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -454,7 +411,6 @@ Task("Default")
 .IsDependentOn("UploadCoverage")
 .IsDependentOn("AssertPackages")
 .IsDependentOn("NuGet")
-.IsDependentOn("GitHubRelease")
 .IsDependentOn("NuGetFeed");
 
 RunTarget(target);

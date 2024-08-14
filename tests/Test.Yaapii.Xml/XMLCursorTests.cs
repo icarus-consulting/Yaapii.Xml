@@ -27,6 +27,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Xunit;
 using Yaapii.Atoms.IO;
+using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml.Test
 {
@@ -457,6 +458,58 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "subitem1",
                 doc.Nodes("/root/item1")[0].Nodes("./subitem1")[0].Values("name()")[0]
+            );
+        }
+
+        [Fact]
+        public void ValuesMethodWorksWithNamespaceInXpath()
+        {
+            Assert.Equal(
+                "Content",
+                FirstOf.New(
+                    new XMLCursor(
+                        new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                    ).WithNamespace(
+                        "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                    )
+                    .Values(
+                        "/n0:Root/n0:A/n0:B/text()"
+                    )
+                ).Value()
+            );
+        }
+
+        [Fact]
+        public void NodesMethodWorksWithNamespaceInXpath()
+        {
+            Assert.Single(
+                new XMLCursor(
+                    new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                ).WithNamespace(
+                    "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                )
+                .Nodes(
+                    "/n0:Root/n0:A"
+                )
+            );
+        }
+
+        [Fact]
+        public void DeliversXMLThatKnowsNamespace()
+        {
+            var subNode =
+                FirstOf.New(
+                    new XMLCursor(
+                        new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                    ).WithNamespace(
+                        "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                    )
+                    .Nodes(
+                        "/n0:Root/n0:A"
+                    )
+                ).Value();
+            Assert.Single(
+                subNode.Nodes("./n0:B")
             );
         }
     }

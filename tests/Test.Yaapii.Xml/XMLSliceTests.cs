@@ -24,6 +24,8 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
+using Yaapii.Atoms.IO;
+using Yaapii.Atoms.Scalar;
 
 namespace Yaapii.Xml.Test
 {
@@ -52,7 +54,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLSlice(
-                    new Yaapii.Atoms.IO.InputOf(inBytes),
+                    new InputOf(inBytes),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -71,7 +73,7 @@ namespace Yaapii.Xml.Test
             Assert.Equal(
                 "Can I or can't I dö prüper äncöding",
                 new XMLSlice(
-                    new Yaapii.Atoms.IO.InputOf(inBytes).Stream(),
+                    new InputOf(inBytes).Stream(),
                     encoding
                 ).Values("/root/text()")[0]
             );
@@ -84,7 +86,7 @@ namespace Yaapii.Xml.Test
         [InlineData("UTF-32")]
         public void FileCtorAppliesEncoding(string name)
         {
-            using (var tmp = new Yaapii.Atoms.IO.TempDirectory())
+            using (var tmp = new TempDirectory())
             {
                 var encoding = Encoding.GetEncoding(name);
                 var inBytes = encoding.GetBytes("<root>Can I or can't I dö prüper äncöding</root>");
@@ -103,6 +105,58 @@ namespace Yaapii.Xml.Test
                     ).Values("/root/text()")[0]
                 );
             }
+        }
+
+        [Fact]
+        public void ValuesMethodWorksWithNamespaceInXpath()
+        {
+            Assert.Equal(
+                "Content",
+                FirstOf.New(
+                    new XMLSlice(
+                        new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                    ).WithNamespace(
+                        "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                    )
+                    .Values(
+                        "/n0:Root/n0:A/n0:B/text()"
+                    )
+                ).Value()
+            );
+        }
+
+        [Fact]
+        public void NodesMethodWorksWithNamespaceInXpath()
+        {
+            Assert.Single(
+                new XMLSlice(
+                    new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                ).WithNamespace(
+                    "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                )
+                .Nodes(
+                    "/n0:Root/n0:A"
+                )
+            );
+        }
+
+        [Fact]
+        public void DeliversXMLThatKnowsNamespace()
+        {
+            var subNode =
+                FirstOf.New(
+                    new XMLSlice(
+                        new ResourceOf("Resources/xmlWithNamespace.xml", this.GetType())
+                    ).WithNamespace(
+                        "n0", "http://standards.iso.org/iso/ts/10303/-3001/-ed-2/tech/xml-schema/bo_model"
+                    )
+                    .Nodes(
+                        "/n0:Root/n0:A"
+                    )
+                ).Value();
+            Assert.Single(
+                subNode.Nodes("/n0:A/n0:B")
+            );
         }
     }
 }

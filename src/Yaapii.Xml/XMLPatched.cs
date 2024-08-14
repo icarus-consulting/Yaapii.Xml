@@ -29,7 +29,7 @@ using Yaapii.Xambly;
 namespace Yaapii.Xml
 {
     /// <summary>
-    /// A XML modified by Xambly.
+    /// An XML modified by Xambly.
     /// <para> Is <see cref="IXML"/> </para>
     /// </summary>
     public sealed class XMLPatched : IXML

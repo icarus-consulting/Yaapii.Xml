@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Yaapii.Xml.Test</RootNamespace>
     <AssemblyName>Yaapii.Xml.Test</AssemblyName>
     <Configurations>Debug;Release</Configurations>
@@ -16,6 +16,7 @@
     <None Remove="Resources\simple.xml" />
     <None Remove="Resources\ValueOfBoom.xsl" />
     <None Remove="Resources\ValueOfFaa.xsl" />
+    <None Remove="Resources\xmlWithNamespace.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,7 @@
     <EmbeddedResource Include="Resources\simple.xml" />
     <EmbeddedResource Include="Resources\ValueOfBoom.xsl" />
     <EmbeddedResource Include="Resources\ValueOfFaa.xsl" />
+    <EmbeddedResource Include="Resources\xmlWithNamespace.xml" />
   </ItemGroup>
 
   <ItemGroup>
