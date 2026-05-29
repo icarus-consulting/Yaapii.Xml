@@ -56,15 +56,25 @@
     <EmbeddedResource Include="Resources\strip.xsl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="4.1.4" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Atoms.Sources" Version="4.1.4" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Yaapii.Xambly" Version="3.0.1" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Xambly.Sources" Version="3.0.1" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+  <Choose>
+    <When Condition="Exists('..\..\..\..\Monorepo.sln')">
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\Yaapii.Atoms\src\Yaapii.Atoms\Yaapii.Atoms.csproj" />
+        <ProjectReference Include="..\..\..\Yaapii.Xambly\src\Yaapii.Xambly\Yaapii.Xambly.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="Yaapii.Atoms" Version="4.1.4" Condition="'$(Configuration)' != 'ReleaseSources'" />
+        <PackageReference Include="Yaapii.Atoms.Sources" Version="4.1.4" Condition="'$(Configuration)' == 'ReleaseSources'">
+          <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Yaapii.Xambly" Version="3.0.1" Condition="'$(Configuration)' != 'ReleaseSources'" />
+        <PackageReference Include="Yaapii.Xambly.Sources" Version="3.0.1" Condition="'$(Configuration)' == 'ReleaseSources'">
+          <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
+        </PackageReference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
 </Project>
