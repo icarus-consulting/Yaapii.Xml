@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Configurations>Debug;Release</Configurations>
@@ -19,7 +18,6 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\sgKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
   <ItemGroup Condition="'$(Configuration)' == 'ReleaseSources'">
     <Content Include="Assets\_._">
       <PackagePath>lib\netstandard2.0\</PackagePath>
@@ -32,39 +30,42 @@
       <PackagePath>content\LIBS\$(AssemblyName)\;contentFiles\cs\netstandard2.0\LIBS\$(AssemblyName)\</PackagePath>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="..\..\LICENSE">
       <PackagePath></PackagePath>
       <Visible>false</Visible>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Assets\_._" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Assets\example-schema.xsd" />
     <None Remove="Assets\example.xml" />
     <None Remove="Resources\strip.xsl" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Assets\example-schema.xsd" />
     <EmbeddedResource Include="Assets\example.xml" />
     <EmbeddedResource Include="Resources\strip.xsl" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Yaapii.Atoms" Version="4.1.4" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Atoms.Sources" Version="4.1.4" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Yaapii.Xambly" Version="3.0.1" Condition="'$(Configuration)' != 'ReleaseSources'" />
-    <PackageReference Include="Yaapii.Xambly.Sources" Version="3.0.1" Condition="'$(Configuration)' == 'ReleaseSources'">
-      <PrivateAssets>analyzers;build;runtime;compile;native;buildtransitive</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
+  <ItemGroup></ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Release'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\Yaapii.Atoms\src\Yaapii.Atoms\Yaapii.Atoms.csproj" />
+        <ProjectReference Include="..\..\..\Yaapii.Atoms\src\Yaapii.Atoms\Yaapii.Atoms.csproj" />
+        <ProjectReference Include="..\..\..\Yaapii.Xambly\src\Yaapii.Xambly\Yaapii.Xambly.csproj" />
+        <ProjectReference Include="..\..\..\Yaapii.Xambly\src\Yaapii.Xambly\Yaapii.Xambly.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="Yaapii.Atoms" Version="4.1.4" />
+        <PackageReference Include="Yaapii.Atoms" Version="4.1.4" />
+        <PackageReference Include="Yaapii.Xambly" Version="3.0.1" />
+        <PackageReference Include="Yaapii.Xambly" Version="3.0.1" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 </Project>
