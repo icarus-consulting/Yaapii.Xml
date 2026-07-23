@@ -55,16 +55,12 @@
     <When Condition="'$(UseProjectReferences)'=='True'">
       <ItemGroup>
         <ProjectReference Include="..\..\..\Yaapii.Atoms\src\Yaapii.Atoms\Yaapii.Atoms.csproj" />
-        <ProjectReference Include="..\..\..\Yaapii.Atoms\src\Yaapii.Atoms\Yaapii.Atoms.csproj" />
-        <ProjectReference Include="..\..\..\Yaapii.Xambly\src\Yaapii.Xambly\Yaapii.Xambly.csproj" />
         <ProjectReference Include="..\..\..\Yaapii.Xambly\src\Yaapii.Xambly\Yaapii.Xambly.csproj" />
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
         <PackageReference Include="Yaapii.Atoms" Version="4.1.4" />
-        <PackageReference Include="Yaapii.Atoms" Version="4.1.4" />
-        <PackageReference Include="Yaapii.Xambly" Version="3.0.1" />
         <PackageReference Include="Yaapii.Xambly" Version="3.0.1" />
       </ItemGroup>
     </Otherwise>
